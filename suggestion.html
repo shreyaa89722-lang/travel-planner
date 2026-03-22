@@ -7,36 +7,33 @@
         body {
             font-family: 'Segoe UI', sans-serif;
             text-align: center;
-            background: linear-gradient(to right, #74ebd5, #acb6e5);
             margin: 0;
             padding: 0;
+            background-size: cover;
+            background-position: center;
+            transition: 0.5s;
         }
 
         h1 {
             color: white;
             margin-top: 30px;
+            text-shadow: 2px 2px 5px black;
         }
 
         .container {
-            background: linear-gradient(135deg, #ffffff, #e3f2fd);
+            background: rgba(255, 255, 255, 0.9);
             width: 320px;
             margin: 40px auto;
             padding: 20px;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-
-        h3 {
-            color: #333;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
 
         select {
             width: 100%;
             padding: 10px;
             border-radius: 10px;
-            border: 1px solid #ccc;
             margin-top: 15px;
-            outline: none;
         }
 
         ul {
@@ -46,17 +43,10 @@
         }
 
         li {
-            background: linear-gradient(to right, #dfe9f3, #ffffff);
+            background: #f1f1f1;
             margin: 8px 0;
-            padding: 12px;
-            border-radius: 12px;
-            transition: 0.3s;
-            font-weight: 500;
-        }
-
-        li:hover {
-            background: linear-gradient(to right, #cfd9df, #e2ebf0);
-            transform: scale(1.05);
+            padding: 10px;
+            border-radius: 10px;
         }
     </style>
 </head>
@@ -70,9 +60,9 @@
 
     <select id="place" onchange="showSuggestions()">
         <option value="">-- Choose --</option>
-        <option value="palace">Bangalore Palace</option>
+        <option value="bangalore">Bangalore</option>
         <option value="lalbagh">Lalbagh</option>
-        <option value="mysore">Mysore Palace</option>
+        <option value="mysore">Mysore</option>
         <option value="coorg">Coorg</option>
         <option value="hampi">Hampi</option>
     </select>
@@ -86,12 +76,24 @@ function showSuggestions() {
     let suggestions = document.getElementById("suggestions");
 
     let data = {
-        palace: ["Cubbon Park", "MG Road", "Vidhana Soudha"],
+        bangalore: ["Cubbon Park", "MG Road", "Vidhana Soudha"],
         lalbagh: ["Bannerghatta Zoo", "Bull Temple", "Jayanagar"],
         mysore: ["Chamundi Hills", "Brindavan Gardens", "Zoo"],
         coorg: ["Abbey Falls", "Raja Seat", "Coffee Plantations"],
         hampi: ["Virupaksha Temple", "Stone Chariot", "Lotus Mahal"]
     };
+
+    // 🌄 Background images
+    let backgrounds = {
+        bangalore: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Vidhana_Soudha_Bangalore.jpg",
+        lalbagh: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Lalbagh_Glass_House.jpg",
+        mysore: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Mysore_Palace.jpg",
+        coorg: "https://upload.wikimedia.org/wikipedia/commons/1/12/Coorg_Hills.jpg",
+        hampi: "https://upload.wikimedia.org/wikipedia/commons/0/0c/Hampi_Stone_Chariot.jpg"
+    };
+
+    // Change background
+    document.body.style.backgroundImage = `url(${backgrounds[place]})`;
 
     suggestions.innerHTML = "";
 
