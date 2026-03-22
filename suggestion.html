@@ -2,7 +2,34 @@
 <html>
 <head>
     <title>Travel Suggestions</title>
+
+    <!-- CSS -->
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+
+        h2 {
+            color: #2c3e50;
+        }
+
+        select {
+            padding: 10px;
+            margin: 20px;
+        }
+
+        li {
+            background: white;
+            margin: 5px auto;
+            padding: 10px;
+            width: 200px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
+
 <body>
 
 <h2>Explore More Places 🌍</h2>
@@ -16,6 +43,7 @@
 <h3>Suggested Places:</h3>
 <ul id="suggestions"></ul>
 
+<!-- JavaScript -->
 <script>
 function showSuggestions() {
     let place = document.getElementById("place").value;
@@ -23,7 +51,7 @@ function showSuggestions() {
 
     let data = {
         palace: ["Cubbon Park", "MG Road", "Vidhana Soudha"],
-        lalbagh: ["Bannerghatta Zoo", "Jayanagar", "Bull Temple"]
+        lalbagh: ["Bannerghatta Zoo", "Bull Temple", "Jayanagar"]
     };
 
     suggestions.innerHTML = "";
