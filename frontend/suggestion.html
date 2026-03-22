@@ -1,51 +1,1010 @@
-from flask import Flask, render_template, jsonify, request
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Drift Away — India Travel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;500;600&family=Pacifico&display=swap" rel="stylesheet">
 
-app = Flask(__name__)
-
-DESTINATIONS = {
-    "Bangalore": {
-        "places": ["ISKCON Temple", "Vidhana Soudha", "Bannerghatta Park"],
-        "tagline": "The Garden City of India",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Vidhana_Soudha_Bangalore.jpg/1280px-Vidhana_Soudha_Bangalore.jpg",
-        "accent": "#8B4513"
-    },
-    "Chikmagalur": {
-        "places": ["Mullayanagiri Peak", "Baba Budangiri", "Coffee Plantations"],
-        "tagline": "Where Coffee Dreams Are Born",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Mullayanagiri.jpg/1280px-Mullayanagiri.jpg",
-        "accent": "#3B5E3F"
-    },
-    "Mysore": {
-        "places": ["Mysore Palace", "Chamundi Hills", "St. Philomena's Church"],
-        "tagline": "The City of Palaces",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Mysore_Palace_Morning.jpg/1280px-Mysore_Palace_Morning.jpg",
-        "accent": "#7B5E00"
-    },
-    "Coorg": {
-        "places": ["Abbey Falls", "Dubare Elephant Camp", "Talakaveri"],
-        "tagline": "Scotland of India",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Abbey_falls_near_Madikeri_Coorg.jpg/1280px-Abbey_falls_near_Madikeri_Coorg.jpg",
-        "accent": "#2E5B3A"
-    },
-    "Hampi": {
-        "places": ["Virupaksha Temple", "Vittala Stone Chariot", "Hemakuta Hill"],
-        "tagline": "A UNESCO World Heritage Marvel",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Virupaksha_temple_at_Hampi.jpg/1280px-Virupaksha_temple_at_Hampi.jpg",
-        "accent": "#8B3A00"
+  <style>
+    :root {
+      --sand:       #f5ede0;
+      --sand-dark:  #e8d9c4;
+      --sand-deep:  #c9ad8e;
+      --dusk:       #2b3a4a;
+      --ocean:      #4a7fa5;
+      --ocean-lt:   #7db5d4;
+      --ocean-pale: #b8d9ec;
+      --foam:       #e8f4f8;
+      --coral:      #e8735a;
+      --coral-lt:   #f0a090;
+      --sun:        #f2b84b;
+      --white:      #fdfaf6;
+      --text:       #3a2e24;
+      --muted:      #8a7a6a;
+      --muted-lt:   #b5a898;
     }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--sand);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATED OCEAN WAVES BG ── */
+    .wave-bg {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 260px;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      opacity: 0.18;
+    }
+    .wave {
+      position: absolute;
+      bottom: 0;
+      left: -100%;
+      width: 300%;
+      height: 160px;
+    }
+    .wave svg { width: 100%; height: 100%; }
+    .wave1 { animation: waveDrift 14s linear infinite; opacity: 0.7; }
+    .wave2 { animation: waveDrift 20s linear infinite reverse; opacity: 0.4; bottom: 10px; }
+    .wave3 { animation: waveDrift 26s linear infinite; opacity: 0.25; bottom: 20px; }
+    @keyframes waveDrift {
+      from { transform: translateX(0); }
+      to   { transform: translateX(33.33%); }
+    }
+
+    /* Floating particles */
+    .particle {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      animation: particleFloat linear infinite;
+      opacity: 0;
+    }
+    @keyframes particleFloat {
+      0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.4; }
+      90%  { opacity: 0.2; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    .page { position: relative; z-index: 1; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(245,237,224,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(201,173,142,0.2);
+    }
+    .nav-brand {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.4rem;
+      color: var(--coral);
+      letter-spacing: 0.02em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ocean); }
+    @media(max-width:600px){
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Sun glow */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 10%; left: 50%;
+      transform: translateX(-50%);
+      width: 500px; height: 500px;
+      background: radial-gradient(ellipse, rgba(242,184,75,0.2) 0%, rgba(232,115,90,0.08) 40%, transparent 70%);
+      border-radius: 50%;
+      animation: sunPulse 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes sunPulse {
+      0%,100% { transform: translateX(-50%) scale(1); opacity: 1; }
+      50%      { transform: translateX(-50%) scale(1.1); opacity: 0.7; }
+    }
+
+    /* Horizon line */
+    .hero-horizon {
+      position: absolute;
+      top: 55%; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(74,127,165,0.3), transparent);
+    }
+
+    .hero-kicker {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--coral);
+      margin-bottom: 1.6rem;
+      animation: fadeFloat 1s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: clamp(3.2rem, 9vw, 8rem);
+      font-weight: 700;
+      line-height: 1.0;
+      color: var(--dusk);
+      letter-spacing: -0.03em;
+      animation: fadeFloat 1s ease 0.1s both;
+    }
+    .hero-title em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--ocean);
+    }
+
+    .hero-wave-text {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      color: var(--coral-lt);
+      margin-top: 0.4rem;
+      animation: fadeFloat 1s ease 0.2s both;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-sub {
+      max-width: 420px;
+      margin: 1.8rem auto 0;
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.8;
+      animation: fadeFloat 1s ease 0.3s both;
+    }
+
+    /* Mood chips */
+    .mood-chips {
+      display: flex;
+      gap: 10px;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeFloat 1s ease 0.4s both;
+    }
+    .mood-chip {
+      padding: 9px 22px;
+      border-radius: 100px;
+      border: 1.5px solid var(--sand-deep);
+      background: rgba(253,250,246,0.7);
+      backdrop-filter: blur(8px);
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.03em;
+    }
+    .mood-chip:hover, .mood-chip.active {
+      background: var(--ocean);
+      border-color: var(--ocean);
+      color: var(--white);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(74,127,165,0.3);
+    }
+    .mood-chip.active-coral {
+      background: var(--coral);
+      border-color: var(--coral);
+      color: var(--white);
+      box-shadow: 0 8px 24px rgba(232,115,90,0.3);
+    }
+
+    /* Scroll nudge */
+    .scroll-nudge {
+      margin-top: 4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted-lt);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: fadeFloat 1.5s ease 1s both;
+    }
+    .nudge-shell {
+      font-size: 1.6rem;
+      animation: shellBob 3s ease-in-out infinite;
+    }
+    @keyframes shellBob {
+      0%,100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(8px) rotate(5deg); }
+    }
+
+    @keyframes fadeFloat {
+      from { opacity:0; transform: translateY(16px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    /* ── SECTION ── */
+    .section {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
+
+    .section-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--coral);
+      margin-bottom: 0.4rem;
+    }
+    .section-heading {
+      font-family: 'Libre Baskerville', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      color: var(--dusk);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    .section-heading em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--ocean);
+    }
+
+    /* Filter pills */
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .f-pill {
+      padding: 8px 20px;
+      border-radius: 100px;
+      border: 1.5px solid var(--sand-deep);
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      letter-spacing: 0.04em;
+    }
+    .f-pill:hover { border-color: var(--ocean-lt); color: var(--ocean); }
+    .f-pill.on {
+      background: var(--dusk);
+      border-color: var(--dusk);
+      color: var(--sand);
+    }
+
+    /* ── CARD GRID ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .card-grid .dest-card:nth-child(4n+1) { grid-column: span 2; }
+    .card-grid .dest-card:nth-child(4n+3) { grid-column: span 2; }
+
+    @media(max-width: 900px) {
+      .card-grid { grid-template-columns: 1fr 1fr; }
+      .card-grid .dest-card { grid-column: span 1 !important; }
+    }
+    @media(max-width: 580px) {
+      .card-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── DEST CARD ── */
+    .dest-card {
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--white);
+      box-shadow: 0 4px 20px rgba(58,46,36,0.08);
+      cursor: pointer;
+      transition: transform 0.4s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      border: 1.5px solid rgba(201,173,142,0.2);
+    }
+    .dest-card:hover {
+      transform: translateY(-10px) rotate(0.3deg);
+      box-shadow: 0 24px 60px rgba(58,46,36,0.15), 0 0 0 2px rgba(74,127,165,0.2);
+    }
+    .dest-card.off { display: none; }
+
+    /* Image */
+    .card-img {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+    }
+    .card-grid .dest-card:nth-child(4n+1) .card-img,
+    .card-grid .dest-card:nth-child(4n+3) .card-img { height: 280px; }
+
+    .card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s ease, filter 0.5s;
+      filter: brightness(0.88) saturate(1.05);
+    }
+    .dest-card:hover .card-img img {
+      transform: scale(1.07);
+      filter: brightness(0.78) saturate(1.15);
+    }
+
+    /* Warm overlay */
+    .card-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(242,184,75,0.08) 0%,
+        transparent 40%,
+        rgba(43,58,74,0.5) 100%
+      );
+    }
+
+    /* Region tag */
+    .region-tag {
+      position: absolute;
+      top: 12px; left: 12px;
+      z-index: 2;
+      padding: 5px 13px;
+      border-radius: 100px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+    }
+    .region-tag.north     { background: rgba(74,127,165,0.85); color: #e8f4f8; }
+    .region-tag.south     { background: rgba(232,115,90,0.85); color: #fff5f3; }
+    .region-tag.karnataka { background: rgba(242,184,75,0.9);  color: #3a2e24; }
+
+    /* Vibe emoji */
+    .vibe-tag {
+      position: absolute;
+      top: 12px; right: 12px;
+      z-index: 2;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(253,250,246,0.9);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    /* Place name on image */
+    .card-img-name {
+      position: absolute;
+      bottom: 14px; left: 16px; right: 16px;
+      z-index: 2;
+      font-family: 'Libre Baskerville', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--white);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      letter-spacing: -0.02em;
+    }
+
+    /* Card body */
+    .card-body {
+      padding: 16px 20px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-tagline {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .card-spots {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: auto;
+    }
+    .spot {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.84rem;
+      color: var(--text);
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 0.4s ease, transform 0.4s ease, color 0.2s;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+    .spot.vis { opacity: 1; transform: translateY(0); }
+    .dest-card:hover .spot { color: var(--dusk); }
+
+    .spot-wave {
+      font-size: 0.75rem;
+      opacity: 0.5;
+      flex-shrink: 0;
+      transition: opacity 0.2s;
+    }
+    .dest-card:hover .spot-wave { opacity: 0.9; }
+
+    /* Explore button */
+    .card-btn {
+      margin-top: 14px;
+      padding: 10px 0;
+      width: 100%;
+      border-radius: 10px;
+      border: 1.5px solid var(--sand-dark);
+      background: transparent;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-transform: uppercase;
+    }
+    .dest-card:hover .card-btn {
+      background: var(--ocean);
+      border-color: var(--ocean);
+      color: var(--white);
+    }
+
+    /* ── VIBE BANNER ── */
+    .vibe-banner {
+      background: linear-gradient(135deg, var(--dusk) 0%, #1a2d40 100%);
+      margin: 0;
+      padding: 5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .vibe-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234a7fa5' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .vibe-banner-inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+    .vibe-emoji-row {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.3em;
+      animation: floatRow 4s ease-in-out infinite;
+    }
+    @keyframes floatRow {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .vibe-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--sand);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+    .vibe-sub {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: var(--ocean-pale);
+      line-height: 1.8;
+    }
+
+    /* ── MODAL ── */
+    .modal-wrap {
+      position: fixed; inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .modal-wrap.open { opacity: 1; pointer-events: all; }
+
+    .modal-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(43,58,74,0.7);
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+    }
+
+    .modal {
+      position: relative; z-index: 1;
+      background: var(--white);
+      border-radius: 24px;
+      width: 100%; max-width: 540px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(30px) scale(0.97);
+      transition: transform 0.4s cubic-bezier(0.34,1.3,0.64,1);
+      scrollbar-width: none;
+      box-shadow: 0 40px 100px rgba(43,58,74,0.35);
+    }
+    .modal::-webkit-scrollbar { display: none; }
+    .modal-wrap.open .modal { transform: translateY(0) scale(1); }
+
+    .modal-img {
+      height: 260px; position: relative; overflow: hidden;
+      border-radius: 24px 24px 0 0;
+    }
+    .modal-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.8) saturate(1.1);
+    }
+    .modal-img::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(43,58,74,0.8) 100%);
+    }
+    .modal-img-text {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 1.5rem 2rem;
+      z-index: 1;
+    }
+    .modal-name {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+    .modal-tagline {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--ocean-pale);
+      margin-top: 4px;
+    }
+
+    .modal-body { padding: 1.8rem 2rem 2rem; }
+
+    .modal-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--coral);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .modal-label::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: var(--sand-dark);
+    }
+
+    .modal-spots {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 1.8rem;
+    }
+    .modal-spot {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: var(--foam);
+      border-radius: 12px;
+      border: 1.5px solid var(--sand-dark);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .modal-spot:hover {
+      background: var(--sand);
+      border-color: var(--ocean-lt);
+    }
+    .modal-spot-num {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.1rem;
+      color: var(--ocean);
+      min-width: 1.5rem;
+    }
+    .modal-spot-name {
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .modal-close {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 12px;
+      background: var(--dusk);
+      color: var(--sand);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: background 0.22s, transform 0.2s;
+    }
+    .modal-close:hover { background: var(--ocean); transform: translateY(-1px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--sand-dark);
+      border-top: 1px solid var(--sand-deep);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    .footer-brand {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.6rem;
+      color: var(--coral);
+      margin-bottom: 0.5rem;
+    }
+    .footer-txt {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--sand); }
+    ::-webkit-scrollbar-thumb { background: var(--sand-deep); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- Floating particles -->
+<div id="particles"></div>
+
+<!-- Wave background -->
+<div class="wave-bg">
+  <div class="wave wave1">
+    <svg viewBox="0 0 900 160" preserveAspectRatio="none">
+      <path d="M0,80 C150,20 350,140 500,80 C650,20 750,140 900,80 L900,160 L0,160 Z" fill="#4a7fa5"/>
+    </svg>
+  </div>
+  <div class="wave wave2">
+    <svg viewBox="0 0 900 160" preserveAspectRatio="none">
+      <path d="M0,100 C200,40 400,160 600,100 C750,50 850,130 900,100 L900,160 L0,160 Z" fill="#7db5d4"/>
+    </svg>
+  </div>
+  <div class="wave wave3">
+    <svg viewBox="0 0 900 160" preserveAspectRatio="none">
+      <path d="M0,120 C100,70 300,150 500,120 C700,90 800,140 900,120 L900,160 L0,160 Z" fill="#b8d9ec"/>
+    </svg>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-brand">Drift Away</div>
+    <ul class="nav-links">
+      <li><a href="#destinations">Places</a></li>
+      <li><a href="#">North</a></li>
+      <li><a href="#">South</a></li>
+      <li><a href="#">Karnataka</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-horizon"></div>
+    <div class="hero-kicker">☀︎ &nbsp; Your next adventure awaits &nbsp; ☀︎</div>
+    <h1 class="hero-title">Find your<br><em>happy place</em></h1>
+    <div class="hero-wave-text">in Incredible India</div>
+    <p class="hero-sub">Slow mornings, golden afternoons, and starlit nights. Discover destinations where time gently melts away.</p>
+    <div class="mood-chips">
+      <div class="mood-chip active" onclick="heroNav('all', this)">🗺 Everywhere</div>
+      <div class="mood-chip" onclick="heroNav('north', this)">🏔 Mountains</div>
+      <div class="mood-chip" onclick="heroNav('south', this)">🌊 Coastline</div>
+      <div class="mood-chip" onclick="heroNav('karnataka', this)">🌿 Karnataka</div>
+    </div>
+    <div class="scroll-nudge">
+      <div class="nudge-shell">🐚</div>
+      scroll to explore
+    </div>
+  </section>
+
+  <!-- Vibe banner -->
+  <div class="vibe-banner">
+    <div class="vibe-banner-inner">
+      <div class="vibe-emoji-row">🌅 🌊 🌴</div>
+      <div class="vibe-title">"Not all those who wander are lost — some are just on holiday."</div>
+      <p class="vibe-sub">Pick a destination, pack light, and let India do the rest. From the snowy passes of Manali to the backwaters of Kerala.</p>
+    </div>
+  </div>
+
+  <!-- Destinations -->
+  <section class="section" id="destinations">
+    <div class="section-top">
+      <div>
+        <div class="section-eyebrow">Curated for you</div>
+        <h2 class="section-heading">Places to <em>drift</em> to</h2>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <button class="f-pill on" onclick="setFilter('all',this)">All Places</button>
+      <button class="f-pill" onclick="setFilter('north',this)">North India</button>
+      <button class="f-pill" onclick="setFilter('south',this)">South India</button>
+      <button class="f-pill" onclick="setFilter('karnataka',this)">Karnataka</button>
+    </div>
+
+    <div class="card-grid" id="grid"></div>
+  </section>
+
+  <footer>
+    <div class="footer-brand">Drift Away</div>
+    <p class="footer-txt">Made with 🌊 for wanderers · India Travel Guide · 2025</p>
+  </footer>
+</div>
+
+<!-- Modal -->
+<div class="modal-wrap" id="modal">
+  <div class="modal-backdrop" onclick="closeModal()"></div>
+  <div class="modal">
+    <div class="modal-img">
+      <img id="mImg" src="" alt=""/>
+      <div class="modal-img-text">
+        <div class="modal-name" id="mName"></div>
+        <div class="modal-tagline" id="mTagline"></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-label">Top spots to visit</div>
+      <div class="modal-spots" id="mSpots"></div>
+      <button class="modal-close" onclick="closeModal()">Back to exploring 🌊</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── PARTICLES ── */
+const COLORS = ['#f2b84b','#e8735a','#7db5d4','#b8d9ec','#f0a090'];
+const pc = document.getElementById('particles');
+for(let i=0;i<18;i++){
+  const p=document.createElement('div');
+  p.className='particle';
+  const size = Math.random()*8+4;
+  p.style.cssText=`
+    width:${size}px;height:${size}px;
+    left:${Math.random()*100}%;
+    background:${COLORS[Math.floor(Math.random()*COLORS.length)]};
+    animation-duration:${Math.random()*20+15}s;
+    animation-delay:${Math.random()*-20}s;
+    opacity:0;
+  `;
+  pc.appendChild(p);
 }
 
-@app.route("/")
-def index():
-    destinations = list(DESTINATIONS.keys())
-    return render_template("index.html", destinations=destinations)
+/* ── DATA ── */
+const DESTS = [
+  // NORTH
+  { id:'jaipur',      region:'north',    vibe:'🏰',
+    name:'Jaipur',            tagline:'The Pink City of Rajasthan',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Hawa_Mahal_Jaipur.jpg/1280px-Hawa_Mahal_Jaipur.jpg',
+    places:['Hawa Mahal','Amber Fort','City Palace','Jantar Mantar'] },
 
-@app.route("/suggest")
-def suggest():
-    place = request.args.get("place", "")
-    if place in DESTINATIONS:
-        return jsonify(DESTINATIONS[place])
-    return jsonify({"places": [], "tagline": "", "image": "", "accent": ""})
+  { id:'manali',      region:'north',    vibe:'🏔',
+    name:'Manali',            tagline:'Where mountains meet the clouds',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Hadimba_Devi_Temple%2C_Manali%2C_HP%2C_India.jpg/1280px-Hadimba_Devi_Temple%2C_Manali%2C_HP%2C_India.jpg',
+    places:['Rohtang Pass','Solang Valley','Hadimba Temple'] },
 
-if __name__ == "__main__":
-    app.run(debug=True)
+  { id:'varanasi',    region:'north',    vibe:'🪔',
+    name:'Varanasi',          tagline:'Eternal city on the holy Ganges',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Varanasi_ghats_001.jpg/1280px-Varanasi_ghats_001.jpg',
+    places:['Dashashwamedh Ghat','Kashi Vishwanath','Sarnath'] },
+
+  { id:'rishikesh',   region:'north',    vibe:'🧘',
+    name:'Rishikesh',         tagline:'Yoga capital of the world',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Laxman_Jhula%2C_Rishikesh.jpg/1280px-Laxman_Jhula%2C_Rishikesh.jpg',
+    places:['Laxman Jhula','Triveni Ghat','Neer Garh Falls'] },
+
+  { id:'agra',        region:'north',    vibe:'💫',
+    name:'Agra',              tagline:'An eternal love story in marble',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1280px-Taj_Mahal_%28Edited%29.jpeg',
+    places:['Taj Mahal','Agra Fort','Fatehpur Sikri'] },
+
+  // SOUTH
+  { id:'kerala',      region:'south',    vibe:'🌴',
+    name:'Kerala',            tagline:"God's own country — pure bliss",
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Kerala_backwater.jpg/1280px-Kerala_backwater.jpg',
+    places:['Alleppey Backwaters','Munnar Tea Hills','Varkala Cliffs'] },
+
+  { id:'madurai',     region:'south',    vibe:'🛕',
+    name:'Madurai',           tagline:'Temple city full of soul',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Meenakshi_Amman_Temple_Madurai.jpg/1280px-Meenakshi_Amman_Temple_Madurai.jpg',
+    places:['Meenakshi Temple','Thirumalai Palace','Gandhi Museum'] },
+
+  { id:'ooty',        region:'south',    vibe:'🌸',
+    name:'Ooty',              tagline:'Queen of the misty Nilgiris',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Ooty_Lake.JPG/1280px-Ooty_Lake.JPG',
+    places:['Ooty Lake','Botanical Gardens','Nilgiri Mountain Railway'] },
+
+  { id:'pondicherry', region:'south',    vibe:'☕',
+    name:'Pondicherry',       tagline:'Slow cafés and French-kissed lanes',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pondicherry_promenade.jpg/1280px-Pondicherry_promenade.jpg',
+    places:['French Quarter','Auroville','Paradise Beach'] },
+
+  // KARNATAKA
+  { id:'hampi',       region:'karnataka', vibe:'🗿',
+    name:'Hampi',             tagline:'UNESCO ruins lost in time',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Virupaksha_temple_at_Hampi.jpg/1280px-Virupaksha_temple_at_Hampi.jpg',
+    places:['Virupaksha Temple','Vittala Stone Chariot','Hemakuta Hill'] },
+
+  { id:'coorg',       region:'karnataka', vibe:'🌧',
+    name:'Coorg',             tagline:'Misty hills and coffee mornings',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Abbey_falls_near_Madikeri_Coorg.jpg/1280px-Abbey_falls_near_Madikeri_Coorg.jpg',
+    places:['Abbey Falls','Dubare Elephant Camp','Talakaveri'] },
+
+  { id:'mysore',      region:'karnataka', vibe:'👑',
+    name:'Mysore',            tagline:'Royal city, timeless charm',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Mysore_Palace_Morning.jpg/1280px-Mysore_Palace_Morning.jpg',
+    places:['Mysore Palace','Chamundi Hills',"St. Philomena's Church"] },
+
+  { id:'chikmagalur', region:'karnataka', vibe:'☕',
+    name:'Chikmagalur',       tagline:'Wake up to misty coffee hills',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Mullayanagiri.jpg/1280px-Mullayanagiri.jpg',
+    places:['Mullayanagiri Peak','Baba Budangiri','Coffee Plantations'] },
+];
+
+const RLABEL = { north:'North India', south:'South India', karnataka:'Karnataka' };
+const NUMS = ['1','2','3','4','5'];
+
+function buildGrid(filter='all') {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  DESTS.filter(d => filter==='all'||d.region===filter).forEach(d => {
+    const card = document.createElement('div');
+    card.className = 'dest-card';
+    card.dataset.region = d.region;
+    card.onclick = () => openModal(d);
+    card.innerHTML = `
+      <div class="card-img">
+        <img src="${d.image}" alt="${d.name}" loading="lazy"/>
+        <div class="region-tag ${d.region}">${RLABEL[d.region]}</div>
+        <div class="vibe-tag">${d.vibe}</div>
+        <div class="card-img-name">${d.name}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-tagline">${d.tagline}</div>
+        <div class="card-spots">
+          ${d.places.slice(0,3).map((p,i)=>`
+            <div class="spot" style="transition-delay:${i*80}ms">
+              <span class="spot-wave">〰</span>
+              <span>${p}</span>
+            </div>
+          `).join('')}
+        </div>
+        <button class="card-btn">Explore this place</button>
+      </div>
+    `;
+    grid.appendChild(card);
+
+    const obs = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.querySelectorAll('.spot').forEach((el,i)=>{
+            setTimeout(()=>el.classList.add('vis'), i*90+80);
+          });
+          obs.unobserve(e.target);
+        }
+      });
+    },{threshold:0.15});
+    obs.observe(card);
+  });
+}
+
+let current = 'all';
+function setFilter(f, btn) {
+  current = f;
+  document.querySelectorAll('.f-pill').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  buildGrid(f);
+}
+
+function heroNav(region, chip) {
+  document.querySelectorAll('.mood-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  document.getElementById('destinations').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>{
+    current = region;
+    buildGrid(region);
+    document.querySelectorAll('.f-pill').forEach(b=>{
+      b.classList.toggle('on',
+        (region==='all' && b.textContent.includes('All')) ||
+        b.textContent.toLowerCase().includes(region)
+      );
+    });
+  }, 550);
+}
+
+function openModal(d) {
+  document.getElementById('mImg').src = d.image;
+  document.getElementById('mName').textContent = d.name;
+  document.getElementById('mTagline').textContent = d.tagline;
+  document.getElementById('mSpots').innerHTML = d.places.map((p,i)=>`
+    <div class="modal-spot">
+      <div class="modal-spot-num">${i+1}</div>
+      <div class="modal-spot-name">${p}</div>
+    </div>
+  `).join('');
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+buildGrid();
+</script>
+</body>
+</html>
