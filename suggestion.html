@@ -116,10 +116,10 @@
         <select id="place" onchange="showSuggestions()">
             <option value="">-- Choose a Destination --</option>
             <option value="bangalore">Bangalore</option>
-            <option value="lalbagh">Lalbagh</option>
-            <option value="mysore">Mysore</option>
-            <option value="coorg">Coorg</option>
-            <option value="hampi">Hampi</option>
+            <option value="Chikmagalur">Chikmagalur</option>
+            <option value="Mysore">Mysore</option>
+            <option value="Coorg">Coorg</option>
+            <option value="Hampi">Hampi</option>
         </select>
 
         <ul id="suggestions"></ul>
@@ -133,20 +133,20 @@
 
             // Destination Data
             const data = {
-                bangalore: ["ISKCON Temple", "Vidhana Soudha", "Bannerghatta Park"],
-                lalbagh: ["The Glass House", "Floral Clock", "Lake View Walkway"],
-                mysore: ["Mysore Palace", "Chamundi Hills", "St. Philomena's Church"],
-                coorg: ["Abbey Falls", "Dubare Elephant Camp", "Talakaveri"],
-                hampi: ["Virupaksha Temple", "Vittala Stone Chariot", "Hemakuta Hill"]
+                Bangalore: ["ISKCON Temple", "Vidhana Soudha", "Bannerghatta Park"],
+                Chikmagalur: ["Mullayanagiri Peak", "Baba Budangiri", "Coffee Plantations"],
+                Mysore: ["Mysore Palace", "Chamundi Hills", "St. Philomena's Church"],
+                Coorg: ["Abbey Falls", "Dubare Elephant Camp", "Talakaveri"],
+                Hampi: ["Virupaksha Temple", "Vittala Stone Chariot", "Hemakuta Hill"]
             };
 
             // Background Images (using high-quality optimized links)
             const backgrounds = {
-                bangalore: "url('https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1600')",
-                lalbagh: "url('https://images.unsplash.com/photo-1614241674488-82502848c471?auto=format&fit=crop&w=1600')",
-                mysore: "url('https://images.unsplash.com/photo-1600100397608-f09009a633c5?auto=format&fit=crop&w=1600')",
-                coorg: "url('https://images.unsplash.com/photo-1590766940554-634a7ed41450?auto=format&fit=crop&w=1600')",
-                hampi: "url('https://images.unsplash.com/photo-1581338834647-b0fb40704e21?auto=format&fit=crop&w=1600')"
+                Bangalore: "url('https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=1600')",
+                Chikmagalur: "url('https://ik.imagekit.io/xoxqszf3k/wp-content/uploads/2015/01/Capture.jpg')",
+                Mysore: "url('https://media.istockphoto.com/id/172124032/photo/mysore-palace-at-dusk.jpg?s=1024x1024&w=is&k=20&c=eGEZM2d_giVdiF7UcLNUJ5mhBWJYM4PonfJO8w5C_vU=')",
+                Coorg: "url('https://media.gettyimages.com/id/2153419113/photo/abbe-water-falls-of-coorg.jpg?s=612x612&w=gi&k=20&c=z5XjBTWppsPVb4KfimBH9Z9JvuDBNWnRCado-yYMHAM=')",
+                Hampi: "url('https://media.gettyimages.com/id/464870363/photo/vittala-temple.jpg?s=612x612&w=gi&k=20&c=qtURpxA37b1TBkqutphaI3udGaFx0Wr_MFofzcOzO6w=')"
             };
 
             // 1. Update Background
