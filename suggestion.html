@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Travel Suggestions</title>
+</head>
+<body>
+
+<h2>Explore More Places 🌍</h2>
+
+<select id="place" onchange="showSuggestions()">
+    <option value="">Select a place</option>
+    <option value="palace">Bangalore Palace</option>
+    <option value="lalbagh">Lalbagh</option>
+</select>
+
+<h3>Suggested Places:</h3>
+<ul id="suggestions"></ul>
+
+<script>
+function showSuggestions() {
+    let place = document.getElementById("place").value;
+    let suggestions = document.getElementById("suggestions");
+
+    let data = {
+        palace: ["Cubbon Park", "MG Road", "Vidhana Soudha"],
+        lalbagh: ["Bannerghatta Zoo", "Jayanagar", "Bull Temple"]
+    };
+
+    suggestions.innerHTML = "";
+
+    if (data[place]) {
+        data[place].forEach(item => {
+            let li = document.createElement("li");
+            li.innerText = item;
+            suggestions.appendChild(li);
+        });
+    }
+}
+</script>
+
+</body>
+</html>
