@@ -9,7 +9,6 @@
     text-align: center;
     margin: 0;
     padding: 0;
-    /* Soft mesh gradient for a more modern, premium look */
     background: radial-gradient(at 0% 0%, hsla(161,65%,85%,1) 0, transparent 50%), 
                 radial-gradient(at 50% 0%, hsla(188,78%,60%,1) 0, transparent 50%), 
                 radial-gradient(at 100% 0%, hsla(204,82%,70%,1) 0, transparent 50%);
@@ -30,7 +29,6 @@ h1 {
 }
 
 .container {
-    /* Enhanced glass effect */
     background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(15px) saturate(180%);
     -webkit-backdrop-filter: blur(15px) saturate(180%);
@@ -114,11 +112,11 @@ function showSuggestions() {
     let suggestions = document.getElementById("suggestions");
 
     let data = {
-        Bangalore: ["ISKCON Banglore", "Lalbagh Botanical Garden", "Vidhana Soudha"],
-        Chikmagalur: ["Mullayanagiri Peak", "Baba Budangiri", "Coffee Plantations"],
-        Mysore: ["Chamundi Hills", "Brindavan Gardens", "Mysore Zoo"],
-        Coorg: ["Abbey Falls", "Raja Seat", "Coffee Estates"],
-        Hampi: ["Virupaksha Temple", "Stone Chariot", "Lotus Mahal"]
+        bangalore: ["ISKCON Bangalore", "Lalbagh Botanical Garden", "Vidhana Soudha"],
+        lalbagh: ["Glass House", "Lake View", "Flower Garden"],
+        mysore: ["Chamundi Hills", "Brindavan Gardens", "Mysore Zoo"],
+        coorg: ["Abbey Falls", "Raja Seat", "Coffee Estates"],
+        hampi: ["Virupaksha Temple", "Stone Chariot", "Lotus Mahal"]
     };
 
     let backgrounds = {
@@ -129,7 +127,6 @@ function showSuggestions() {
         hampi: "url('https://upload.wikimedia.org/wikipedia/commons/0/0c/Hampi_Stone_Chariot.jpg')"
     };
 
-    // 🌄 Change background
     if (backgrounds[place]) {
         document.body.style.backgroundImage = backgrounds[place];
     } else {
