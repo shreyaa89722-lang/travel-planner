@@ -829,7 +829,8 @@
   <div class="modal-backdrop" onclick="closeModal()"></div>
   <div class="modal">
     <div class="modal-img">
-      <img id="mImg" src="" alt=""/>
+      <img id="mImg" src="" alt="" crossorigin="anonymous"
+        onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#a8d4f0,#f5bfb0)'"/>
       <div class="modal-img-text">
         <div class="modal-name" id="mName"></div>
         <div class="modal-tagline" id="mTagline"></div>
@@ -867,70 +868,75 @@ const DESTS = [
   // NORTH
   { id:'jaipur',      region:'north',    vibe:'🏰',
     name:'Jaipur',            tagline:'The Pink City of Rajasthan',
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Hawa_Mahal_Jaipur.jpg/1280px-Hawa_Mahal_Jaipur.jpg',
+    image:'https://images.unsplash.com/photo-1599661046289-e31897846e41?w=800&auto=format&fit=crop',
     places:['Hawa Mahal','Amber Fort','City Palace','Jantar Mantar'] },
 
   { id:'manali',      region:'north',    vibe:'🏔',
     name:'Manali',            tagline:'Where mountains meet the clouds',
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Hadimba_Devi_Temple%2C_Manali%2C_HP%2C_India.jpg/1280px-Hadimba_Devi_Temple%2C_Manali%2C_HP%2C_India.jpg',
+    image:'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&auto=format&fit=crop',
     places:['Rohtang Pass','Solang Valley','Hadimba Temple'] },
 
   { id:'varanasi',    region:'north',    vibe:'🪔',
     name:'Varanasi',          tagline:'Eternal city on the holy Ganges',
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Varanasi_ghats_001.jpg/1280px-Varanasi_ghats_001.jpg',
+    image:'https://images.unsplash.com/photo-1561361058-c24cecae35ca?w=800&auto=format&fit=crop',
     places:['Dashashwamedh Ghat','Kashi Vishwanath','Sarnath'] },
 
   { id:'rishikesh',   region:'north',    vibe:'🧘',
     name:'Rishikesh',         tagline:'Yoga capital of the world',
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Laxman_Jhula%2C_Rishikesh.jpg/1280px-Laxman_Jhula%2C_Rishikesh.jpg',
+    image:'https://images.unsplash.com/photo-1591018653147-ac6b3e7c1339?w=800&auto=format&fit=crop',
     places:['Laxman Jhula','Triveni Ghat','Neer Garh Falls'] },
 
   { id:'agra',        region:'north',    vibe:'💫',
     name:'Agra',              tagline:'An eternal love story in marble',
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Taj_Mahal_%28Edited%29.jpeg/1280px-Taj_Mahal_%28Edited%29.jpeg',
+    image:'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&auto=format&fit=crop',
     places:['Taj Mahal','Agra Fort','Fatehpur Sikri'] },
 
   // SOUTH
   { id:'kerala',      region:'south',    vibe:'🌴',
     name:'Kerala',            tagline:"God's own country — pure bliss",
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Kerala_backwater.jpg/1280px-Kerala_backwater.jpg',
+    image:'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&auto=format&fit=crop',
     places:['Alleppey Backwaters','Munnar Tea Hills','Varkala Cliffs'] },
 
   { id:'madurai',     region:'south',    vibe:'🛕',
     name:'Madurai',           tagline:'Temple city full of soul',
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Meenakshi_Amman_Temple_Madurai.jpg/1280px-Meenakshi_Amman_Temple_Madurai.jpg',
+    image:'https://images.unsplash.com/photo-1621996659490-3275b4d0d951?w=800&auto=format&fit=crop',
     places:['Meenakshi Temple','Thirumalai Palace','Gandhi Museum'] },
 
   { id:'ooty',        region:'south',    vibe:'🌸',
     name:'Ooty',              tagline:'Queen of the misty Nilgiris',
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Ooty_Lake.JPG/1280px-Ooty_Lake.JPG',
+    image:'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800&auto=format&fit=crop',
     places:['Ooty Lake','Botanical Gardens','Nilgiri Mountain Railway'] },
 
   { id:'pondicherry', region:'south',    vibe:'☕',
     name:'Pondicherry',       tagline:'Slow cafés and French-kissed lanes',
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pondicherry_promenade.jpg/1280px-Pondicherry_promenade.jpg',
+    image:'https://images.unsplash.com/photo-1604928141064-207cea6f571f?w=800&auto=format&fit=crop',
     places:['French Quarter','Auroville','Paradise Beach'] },
 
   // KARNATAKA
   { id:'hampi',       region:'karnataka', vibe:'🗿',
     name:'Hampi',             tagline:'UNESCO ruins lost in time',
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Virupaksha_temple_at_Hampi.jpg/1280px-Virupaksha_temple_at_Hampi.jpg',
+    image:'https://images.unsplash.com/photo-1590050751517-c651e6250dec?w=800&auto=format&fit=crop',
     places:['Virupaksha Temple','Vittala Stone Chariot','Hemakuta Hill'] },
 
   { id:'coorg',       region:'karnataka', vibe:'🌧',
     name:'Coorg',             tagline:'Misty hills and coffee mornings',
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Abbey_falls_near_Madikeri_Coorg.jpg/1280px-Abbey_falls_near_Madikeri_Coorg.jpg',
+    image:'https://images.unsplash.com/photo-1571536802807-30451e3955d8?w=800&auto=format&fit=crop',
     places:['Abbey Falls','Dubare Elephant Camp','Talakaveri'] },
 
   { id:'mysore',      region:'karnataka', vibe:'👑',
     name:'Mysore',            tagline:'Royal city, timeless charm',
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Mysore_Palace_Morning.jpg/1280px-Mysore_Palace_Morning.jpg',
+    image:'https://images.unsplash.com/photo-1567157577867-05ccb1388e66?w=800&auto=format&fit=crop',
     places:['Mysore Palace','Chamundi Hills',"St. Philomena's Church"] },
 
   { id:'chikmagalur', region:'karnataka', vibe:'☕',
     name:'Chikmagalur',       tagline:'Wake up to misty coffee hills',
-    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Mullayanagiri.jpg/1280px-Mullayanagiri.jpg',
+    image:'https://images.unsplash.com/photo-1595974482597-4d2b75d9b975?w=800&auto=format&fit=crop',
     places:['Mullayanagiri Peak','Baba Budangiri','Coffee Plantations'] },
+
+  { id:'dharwad',     region:'karnataka', vibe:'🎵',
+    name:'Dharwad',           tagline:'City of music, pedha & old-world soul',
+    image:'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800&auto=format&fit=crop',
+    places:['Satar Manzil Palace','Chandramouleshwara Temple','Nrupatunga Betta','Famous Dharwad Pedha'] },
 ];
 
 const RLABEL = { north:'North India', south:'South India', karnataka:'Karnataka' };
@@ -946,7 +952,8 @@ function buildGrid(filter='all') {
     card.onclick = () => openModal(d);
     card.innerHTML = `
       <div class="card-img">
-        <img src="${d.image}" alt="${d.name}" loading="lazy"/>
+        <img src="${d.image}" alt="${d.name}" loading="lazy" crossorigin="anonymous"
+          onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#a8d4f0,#f5bfb0)'"/>
         <div class="region-tag ${d.region}">${RLABEL[d.region]}</div>
         <div class="vibe-tag">${d.vibe}</div>
         <div class="card-img-name">${d.name}</div>
