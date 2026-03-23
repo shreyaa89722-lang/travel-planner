@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Budget Calculator</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ff9933, #138808);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 450px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ff9933;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff9933, #138808);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        button:hover { opacity: 0.9; }
+        .result {
+            display: none;
+            margin-top: 20px;
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .result h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            color: #555;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff9933;
+        }
+        .destination-tag {
+            text-align: center;
+            background: #ff9933;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: inline-block;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✈️ Travel Budget Calculator</h1>
+
+        <label>📍 Destination</label>
+        <input type="text" id="destination" placeholder="e.g. Goa, Mumbai, Delhi...">
+
+        <label>📅 Number of Days</label>
+        <input type="number" id="days" placeholder="e.g. 3" min="1">
+
+        <label>🏨 Stay Type (per night)</label>
+        <select id="stay">
+            <option value="0">-- Select Stay --</option>
+            <option value="800">Budget (RS 800/night)</option>
+            <option value="2000">Standard (RS 2000/night)</option>
+            <option value="5000">Luxury (RS 5000/night)</option>
+        </select>
+
+        <label>🍽️ Food (per day)</label>
+        <select id="food">
+            <option value="0">-- Select Food --</option>
+            <option value="300">Cheap (RS 300/day)</option>
+            <option value="800">Medium (RS 800/day)</option>
+            <option value="2000">Expensive (RS 2000/day)</option>
+        </select>
+
+        <label>⛽ Fuel Cost (RS)</label>
+        <input type="number" id="fuel" placeholder="Enter estimated fuel cost">
+
+        <label>📦 Other Expenses (RS)</label>
+        <input type="number" id="other" placeholder="Shopping, tickets etc.">
+
+        <button onclick="calculate()">Calculate My Budget 💰</button>
+
+        <div class="result" id="result">
+            <h2>💰 Budget Summary</h2>
+            <div class="destination-tag" id="destTag"></div>
+            <div class="result-row">
+                <span>🏨 Stay</span>
+                <span id="stayTotal"></span>
+            </div>
+            <div class="result-row">
+                <span>🍽️ Food</span>
+                <span id="foodTotal"></span>
+            </div>
+            <div class="result-row">
+                <span>⛽ Fuel</span>
+                <span id="fuelTotal"></span>
+            </div>
+            <div class="result-row">
+                <span>📦 Others</span>
+                <span id="otherTotal"></span>
+            </div>
+            <div class="total-row">
+                <span>Total</span>
+                <span id="grandTotal"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            let destination = document.getElementById("destination").value;
+            let days = parseFloat(document.getElementById("days").value) || 1;
+            let stayPerNight = parseFloat(document.getElementById("stay").value) || 0;
+            let foodPerDay = parseFloat(document.getElementById("food").value) || 0;
+            let fuel = parseFloat(document.getElementById("fuel").value) || 0;
+            let other = parseFloat(document.getElementById("other").value) || 0;
+
+            if(!destination) {
+                alert("Please enter a destination!");
+                return;
+            }
+
+            let stayTotal = stayPerNight * days;
+            let foodTotal = foodPerDay * days;
+            let grandTotal = stayTotal + foodTotal + fuel + other;
+
+            document.getElementById("destTag").innerHTML = "📍 " + destination + " · " + days + " days";
+            document.getElementById("stayTotal").innerHTML = "RS " + stayTotal.toFixed(2);
+            document.getElementById("foodTotal").innerHTML = "RS " + foodTotal.toFixed(2);
+            document.getElementById("fuelTotal").innerHTML = "RS " + fuel.toFixed(2);
+            document.getElementById("otherTotal").innerHTML = "RS " + other.toFixed(2);
+            document.getElementById("grandTotal").innerHTML = "RS " + grandTotal.toFixed(2);
+
+            document.getElementById("result").style.display = "block";
+        }
+    </script>
+</body>
+</html>
