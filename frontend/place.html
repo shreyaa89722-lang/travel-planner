@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xplor - Places</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            animation: spinSlow 8s linear infinite;
+        }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: white;
+        }
+
+        .logo-text span { color: #ff9933; }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover { color: white; }
+        .nav-links a.active { color: #ff9933; }
+
+        .nav-btn {
+            background: #ff9933 !important;
+            color: white !important;
+            padding: 8px 22px;
+            border-radius: 20px;
+        }
+
+        /* PAGE CONTENT */
+        .page {
+            padding: 90px 50px 50px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 40px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .page-header h1 span { color: #ff9933; }
+
+        .page-header p {
+            color: #666;
+            font-size: 15px;
+        }
+
+        /* SEARCH */
+        .search-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 8px;
+            border-radius: 50px;
+            width: 100%;
+            max-width: 550px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: white;
+            flex: 1;
+        }
+
+        .search-box input::placeholder { color: #555; }
+
+        .search-box button {
+            background: #ff9933;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-box button:hover { background: #e8851f; }
+
+        /* FILTER TABS */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            color: #aaa;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(255,153,51,0.15);
+            border-color: rgba(255,153,51,0.3);
+            color: #ff9933;
+        }
+
+        /* LOADING */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* NO RESULTS */
+        .no-results {
+            display: none;
+            text-align: center;
+            padding: 60px;
+            color: #555;
+        }
+
+        .no-results .icon { font-size: 50px; margin-bottom: 15px; }
+
+        /* PLACES GRID */
+        .places-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* PLACE CARD */
+        .place-card {
+            background: #16213e;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .place-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,153,51,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .place-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: linear-gradient(135deg, rgba(255,153,51,0.2), rgba(19,136,8,0.2));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 60px;
+        }
+
+        .place-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .place-info {
+            padding: 15px;
+        }
+
+        .place-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .place-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .place-rating {
+            background: rgba(255,153,51,0.15);
+            color: #ff9933;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .place-location {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .place-desc {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .place-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .place-distance {
+            font-size: 12px;
+            color: #555;
+        }
+
+        .place-tag {
+            background: rgba(255,255,255,0.05);
+            color: #aaa;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        /* DEFAULT PLACES */
+        .default-section {
+            margin-bottom: 15px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            color: #555;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a class="logo" href="index.html">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="45" stroke="#ff9933" stroke-width="2" stroke-dasharray="6 3"/>
+                <circle cx="50" cy="50" r="30" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <polygon points="50,10 55,50 50,45 45,50" fill="#ff9933"/>
+                <polygon points="50,90 55,50 50,55 45,50" fill="rgba(255,255,255,0.3)"/>
+                <polygon points="10,50 50,45 55,50 50,55" fill="rgba(255,255,255,0.3)"/>
+                <polygon points="90,50 50,45 45,50 50,55" fill="rgba(255,255,255,0.15)"/>
+                <circle cx="50" cy="50" r="5" fill="#ff9933"/>
+            </svg>
+            <div class="logo-text">XPL<span>O</span>R</div>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="places.html" class="active">Places</a></li>
+            <li><a href="budget.html">Budget</a></li>
+            <li><a href="suggestion.html" class="nav-btn">Suggest ✨</a></li>
+        </ul>
+    </nav>
+
+    <div class="page">
+        <div class="page-header">
+            <h1>Discover <span>Amazing</span> Places</h1>
+            <p>Search and explore the most beautiful destinations across India</p>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍  Search places... Goa, Munnar, Hampi...">
+                <button onclick="searchPlaces()">Search →</button>
+            </div>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterPlaces('all', this)">🌍 All</button>
+            <button class="filter-btn" onclick="filterPlaces('beach', this)">🏖️ Beaches</button>
+            <button class="filter-btn" onclick="filterPlaces('mountain', this)">⛰️ Mountains</button>
+            <button class="filter-btn" onclick="filterPlaces('heritage', this)">🏛️ Heritage</button>
+            <button class="filter-btn" onclick="filterPlaces('nature', this)">🌿 Nature</button>
+            <button class="filter-btn" onclick="filterPlaces('city', this)">🌆 Cities</button>
+        </div>
+
+        <!-- LOADING -->
+        <div class="loading" id="loading">🔍 Searching places...</div>
+
+        <!-- NO RESULTS -->
+        <div class="no-results" id="noResults">
+            <div class="icon">🗺️</div>
+            <p>No places found! Try another search.</p>
+        </div>
+
+        <!-- DEFAULT LABEL -->
+        <div class="default-section">
+            <div class="section-label" id="sectionLabel">✨ Popular Destinations in India</div>
+        </div>
+
+        <!-- PLACES GRID -->
+        <div class="places-grid" id="placesGrid"></div>
+    </div>
+
+    <script>
+        // Default places data
+        const allPlaces = [
+            { name: "Goa Beach", location: "Goa", desc: "Famous for stunning beaches, nightlife and Portuguese heritage.", rating: "4.8", distance: "1,400 km from Delhi", tag: "beach", icon: "🏖️" },
+            { name: "Taj Mahal", location: "Agra, Uttar Pradesh", desc: "One of the Seven Wonders of the World, a symbol of eternal love.", rating: "4.9", distance: "200 km from Delhi", tag: "heritage", icon: "🕌" },
+            { name: "Munnar", location: "Kerala", desc: "Breathtaking tea gardens and misty hills in God's Own Country.", rating: "4.7", distance: "1,800 km from Delhi", tag: "nature", icon: "🌿" },
+            { name: "Jaipur", location: "Rajasthan", desc: "The Pink City with magnificent forts, palaces and vibrant culture.", rating: "4.6", distance: "280 km from Delhi", tag: "city", icon: "🏰" },
+            { name: "Himalayas", location: "Himachal Pradesh", desc: "Majestic snow-capped mountains perfect for trekking and adventure.", rating: "4.9", distance: "500 km from Delhi", tag: "mountain", icon: "⛰️" },
+            { name: "Hampi", location: "Karnataka", desc: "Ancient ruins of the Vijayanagara Empire, a UNESCO World Heritage Site.", rating: "4.7", distance: "1,500 km from Delhi", tag: "heritage", icon: "🏛️" },
+            { name: "Andaman Islands", location: "Andaman & Nicobar", desc: "Crystal clear waters, coral reefs and pristine white sand beaches.", rating: "4.8", distance: "2,200 km from Delhi", tag: "beach", icon: "🌊" },
+            { name: "Manali", location: "Himachal Pradesh", desc: "Adventure capital of India with snow, rivers and stunning valleys.", rating: "4.7", distance: "550 km from Delhi", tag: "mountain", icon: "🏔️" },
+            { name: "Varanasi", location: "Uttar Pradesh", desc: "One of the world's oldest cities, spiritual capital on the Ganges.", rating: "4.6", distance: "800 km from Delhi", tag: "heritage", icon: "🕍" },
+            { name: "Mysuru", location: "Karnataka", desc: "City of Palaces known for its royal heritage and Dasara festival.", rating: "4.7", distance: "1,600 km from Delhi", tag: "city", icon: "👑" },
+            { name: "Rann of Kutch", location: "Gujarat", desc: "World's largest salt desert, magical especially during full moon nights.", rating: "4.8", distance: "1,000 km from Delhi", tag: "nature", icon: "🌅" },
+            { name: "Coorg", location: "Karnataka", desc: "Scotland of India — lush coffee plantations and misty valleys.", rating: "4.6", distance: "1,700 km from Delhi", tag: "nature", icon: "☕" },
+        ];
+
+        let currentFilter = 'all';
+
+        // Render places
+        function renderPlaces(places) {
+            const grid = document.getElementById("placesGrid");
+            const noResults = document.getElementById("noResults");
+
+            if(places.length === 0) {
+                grid.innerHTML = '';
+                noResults.style.display = "block";
+                return;
+            }
+
+            noResults.style.display = "none";
+            grid.innerHTML = places.map(place => `
+                <div class="place-card">
+                    <div class="place-img">${place.icon}</div>
+                    <div class="place-info">
+                        <div class="place-top">
+                            <div class="place-name">${place.name}</div>
+                            <div class="place-rating">⭐ ${place.rating}</div>
+                        </div>
+                        <div class="place-location">📍 ${place.location}</div>
+                        <div class="place-desc">${place.desc}</div>
+                        <div class="place-footer">
+                            <div class="place-distance">🚗 ${place.distance}</div>
+                            <div class="place-tag">${place.tag}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter places
+        function filterPlaces(type, btn) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            let filtered = type === 'all' ? allPlaces : allPlaces.filter(p => p.tag === type);
+            document.getElementById("sectionLabel").innerHTML = type === 'all' ? '✨ Popular Destinations in India' : `✨ ${type.charAt(0).toUpperCase() + type.slice(1)} Destinations`;
+            renderPlaces(filtered);
+        }
+
+        // Search places
+        function searchPlaces() {
+            let query = document.getElementById("searchInput").value.toLowerCase();
+            if(!query) {
+                renderPlaces(allPlaces);
+                return;
+            }
+
+            document.getElementById("sectionLabel").innerHTML = `🔍 Results for "${document.getElementById("searchInput").value}"`;
+
+            let results = allPlaces.filter(p =>
+                p.name.toLowerCase().includes(query) ||
+                p.location.toLowerCase().includes(query) ||
+                p.desc.toLowerCase().includes(query) ||
+                p.tag.toLowerCase().includes(query)
+            );
+
+            renderPlaces(results);
+        }
+
+        // Search on Enter
+        document.getElementById("searchInput").addEventListener("keypress", function(e) {
+            if(e.key === "Enter") searchPlaces();
+        });
+
+        // Check URL for destination from home page search
+        window.onload = function() {
+            renderPlaces(allPlaces);
+            let params = new URLSearchParams(window.location.search);
+            let dest = params.get('destination');
+            if(dest) {
+                document.getElementById("searchInput").value = dest;
+                searchPlaces();
+            }
+        }
+    </script>
+
+</body>
+</html>
