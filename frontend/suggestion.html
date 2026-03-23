@@ -1,179 +1,1036 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Karnataka Travel Planner</title>
-    <style>
-        /* 1. Global Styles & Smooth Background Transitions */
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            /* Initial Mesh Gradient */
-            background: radial-gradient(at 0% 0%, hsla(161,65%,85%,1) 0, transparent 50%), 
-                        radial-gradient(at 50% 0%, hsla(188,78%,60%,1) 0, transparent 50%), 
-                        radial-gradient(at 100% 0%, hsla(204,82%,70%,1) 0, transparent 50%);
-            background-color: #c7ddb5;
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.8s ease-in-out; /* Smooth fade effect */
-        }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Drift Away — India Travel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;500;600&family=Pacifico&display=swap" rel="stylesheet">
 
-        /* 2. Typography */
-        h1 {
-            color: #101010;
-            margin-bottom: 20px;
-            font-size: 42px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.8);
-        }
+  <style>
+    :root {
+      --sand:       #f5ede0;
+      --sand-dark:  #e8d9c4;
+      --sand-deep:  #c9ad8e;
+      --dusk:       #2b3a4a;
+      --ocean:      #4a7fa5;
+      --ocean-lt:   #7db5d4;
+      --ocean-pale: #b8d9ec;
+      --foam:       #e8f4f8;
+      --coral:      #e8735a;
+      --coral-lt:   #f0a090;
+      --sun:        #f2b84b;
+      --white:      #fdfaf6;
+      --text:       #3a2e24;
+      --muted:      #8a7a6a;
+      --muted-lt:   #b5a898;
+    }
 
-        /* 3. The Glassmorphism Container */
-        .container {
-            background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(15px) saturate(160%);
-            -webkit-backdrop-filter: blur(15px) saturate(160%);
-            width: 350px;
-            padding: 40px;
-            border-radius: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-            color: #2c3e50;
-        }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
-        h3 {
-            margin-bottom: 20px;
-            font-weight: 600;
-            font-size: 1.2rem;
-        }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(
+        180deg,
+        #a8d4f0 0%,
+        #b8ddf5 12%,
+        #cce6f8 25%,
+        #dff0fa 36%,
+        #eef6fc 46%,
+        #f8ede8 56%,
+        #f9ddd4 66%,
+        #f8cfc2 76%,
+        #f7c4b5 86%,
+        #f5bfb0 100%
+      );
+      background-attachment: fixed;
+      color: var(--text);
+      overflow-x: hidden;
+    }
 
-        /* 4. Interactive Elements */
-        select {
-            width: 100%;
-            padding: 14px;
-            border-radius: 14px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            background: white;
-            outline: none;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #2c3e50;
-        }
+    /* ── ANIMATED OCEAN WAVES BG ── */
+    .wave-bg {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 260px;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      opacity: 0.18;
+    }
+    .wave {
+      position: absolute;
+      bottom: 0;
+      left: -100%;
+      width: 300%;
+      height: 160px;
+    }
+    .wave svg { width: 100%; height: 100%; }
+    .wave1 { animation: waveDrift 14s linear infinite; opacity: 0.7; }
+    .wave2 { animation: waveDrift 20s linear infinite reverse; opacity: 0.4; bottom: 10px; }
+    .wave3 { animation: waveDrift 26s linear infinite; opacity: 0.25; bottom: 20px; }
+    @keyframes waveDrift {
+      from { transform: translateX(0); }
+      to   { transform: translateX(33.33%); }
+    }
 
-        select:focus {
-            box-shadow: 0 0 0 4px rgba(31, 64, 55, 0.2);
-        }
+    /* Floating particles */
+    .particle {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      animation: particleFloat linear infinite;
+      opacity: 0;
+    }
+    @keyframes particleFloat {
+      0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.4; }
+      90%  { opacity: 0.2; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
 
-        ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 30px;
-        }
+    .page { position: relative; z-index: 1; }
 
-        li {
-            background: rgba(255, 255, 255, 0.85);
-            color: #1f4037;
-            margin: 12px 0;
-            padding: 16px;
-            border-radius: 18px;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            opacity: 0; /* Starts hidden for JS animation */
-            transform: translateY(10px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.2rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(168, 212, 240, 0.55);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(140, 190, 230, 0.25);
+    }
+    .nav-brand {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.4rem;
+      color: var(--coral);
+      letter-spacing: 0.02em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ocean); }
+    @media(max-width:600px){
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+    }
 
-        li:hover {
-            transform: translateY(-5px) scale(1.02);
-            background: #ffffff;
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
-        }
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
 
-        /* Animation class for the list items */
-        .show-li {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
+    /* Sun glow */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 5%; left: 50%;
+      transform: translateX(-50%);
+      width: 680px; height: 680px;
+      background: radial-gradient(ellipse,
+        rgba(200, 230, 255, 0.55) 0%,
+        rgba(168, 212, 240, 0.25) 40%,
+        rgba(245, 191, 176, 0.1) 65%,
+        transparent 80%
+      );
+      border-radius: 50%;
+      animation: sunPulse 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes sunPulse {
+      0%,100% { transform: translateX(-50%) scale(1); opacity: 1; }
+      50%      { transform: translateX(-50%) scale(1.1); opacity: 0.7; }
+    }
+
+    /* Horizon line */
+    .hero-horizon {
+      position: absolute;
+      top: 55%; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(74,127,165,0.3), transparent);
+    }
+
+    .hero-kicker {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--coral);
+      margin-bottom: 1.6rem;
+      animation: fadeFloat 1s ease both;
+    }
+
+    .hero-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: clamp(3.2rem, 9vw, 8rem);
+      font-weight: 700;
+      line-height: 1.0;
+      color: var(--dusk);
+      letter-spacing: -0.03em;
+      animation: fadeFloat 1s ease 0.1s both;
+    }
+    .hero-title em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--ocean);
+    }
+
+    .hero-wave-text {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      color: var(--coral-lt);
+      margin-top: 0.4rem;
+      animation: fadeFloat 1s ease 0.2s both;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-sub {
+      max-width: 420px;
+      margin: 1.8rem auto 0;
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.8;
+      animation: fadeFloat 1s ease 0.3s both;
+    }
+
+    /* Mood chips */
+    .mood-chips {
+      display: flex;
+      gap: 10px;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeFloat 1s ease 0.4s both;
+    }
+    .mood-chip {
+      padding: 9px 22px;
+      border-radius: 100px;
+      border: 1.5px solid var(--sand-deep);
+      background: rgba(253,250,246,0.7);
+      backdrop-filter: blur(8px);
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.03em;
+    }
+    .mood-chip:hover, .mood-chip.active {
+      background: var(--ocean);
+      border-color: var(--ocean);
+      color: var(--white);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(74,127,165,0.3);
+    }
+    .mood-chip.active-coral {
+      background: var(--coral);
+      border-color: var(--coral);
+      color: var(--white);
+      box-shadow: 0 8px 24px rgba(232,115,90,0.3);
+    }
+
+    /* Scroll nudge */
+    .scroll-nudge {
+      margin-top: 4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted-lt);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: fadeFloat 1.5s ease 1s both;
+    }
+    .nudge-shell {
+      font-size: 1.6rem;
+      animation: shellBob 3s ease-in-out infinite;
+    }
+    @keyframes shellBob {
+      0%,100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(8px) rotate(5deg); }
+    }
+
+    @keyframes fadeFloat {
+      from { opacity:0; transform: translateY(16px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    /* ── SECTION ── */
+    .section {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
+
+    .section-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--coral);
+      margin-bottom: 0.4rem;
+    }
+    .section-heading {
+      font-family: 'Libre Baskerville', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      color: var(--dusk);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    .section-heading em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--ocean);
+    }
+
+    /* Filter pills */
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .f-pill {
+      padding: 8px 20px;
+      border-radius: 100px;
+      border: 1.5px solid var(--sand-deep);
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      letter-spacing: 0.04em;
+    }
+    .f-pill:hover { border-color: var(--ocean-lt); color: var(--ocean); }
+    .f-pill.on {
+      background: var(--dusk);
+      border-color: var(--dusk);
+      color: var(--sand);
+    }
+
+    /* ── CARD GRID ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .card-grid .dest-card:nth-child(4n+1) { grid-column: span 2; }
+    .card-grid .dest-card:nth-child(4n+3) { grid-column: span 2; }
+
+    @media(max-width: 900px) {
+      .card-grid { grid-template-columns: 1fr 1fr; }
+      .card-grid .dest-card { grid-column: span 1 !important; }
+    }
+    @media(max-width: 580px) {
+      .card-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── DEST CARD ── */
+    .dest-card {
+      border-radius: 20px;
+      overflow: hidden;
+      background: rgba(255, 252, 250, 0.78);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 4px 24px rgba(140,180,220,0.15), 0 1px 0 rgba(255,255,255,0.7) inset;
+      cursor: pointer;
+      transition: transform 0.4s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      border: 1.5px solid rgba(200, 225, 245, 0.4);
+    }
+    .dest-card:hover {
+      transform: translateY(-10px) rotate(0.3deg);
+      box-shadow: 0 28px 60px rgba(140,180,220,0.22), 0 0 0 2px rgba(168,212,240,0.4);
+    }
+    .dest-card.off { display: none; }
+
+    /* Image */
+    .card-img {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+    }
+    .card-grid .dest-card:nth-child(4n+1) .card-img,
+    .card-grid .dest-card:nth-child(4n+3) .card-img { height: 280px; }
+
+    .card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s ease, filter 0.5s;
+      filter: brightness(0.88) saturate(1.05);
+    }
+    .dest-card:hover .card-img img {
+      transform: scale(1.07);
+      filter: brightness(0.78) saturate(1.15);
+    }
+
+    /* Warm overlay */
+    .card-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(242,184,75,0.08) 0%,
+        transparent 40%,
+        rgba(43,58,74,0.5) 100%
+      );
+    }
+
+    /* Region tag */
+    .region-tag {
+      position: absolute;
+      top: 12px; left: 12px;
+      z-index: 2;
+      padding: 5px 13px;
+      border-radius: 100px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+    }
+    .region-tag.north     { background: rgba(74,127,165,0.85); color: #e8f4f8; }
+    .region-tag.south     { background: rgba(232,115,90,0.85); color: #fff5f3; }
+    .region-tag.karnataka { background: rgba(242,184,75,0.9);  color: #3a2e24; }
+
+    /* Vibe emoji */
+    .vibe-tag {
+      position: absolute;
+      top: 12px; right: 12px;
+      z-index: 2;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(253,250,246,0.9);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    /* Place name on image */
+    .card-img-name {
+      position: absolute;
+      bottom: 14px; left: 16px; right: 16px;
+      z-index: 2;
+      font-family: 'Libre Baskerville', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--white);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      letter-spacing: -0.02em;
+    }
+
+    /* Card body */
+    .card-body {
+      padding: 16px 20px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-tagline {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .card-spots {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: auto;
+    }
+    .spot {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.84rem;
+      color: var(--text);
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 0.4s ease, transform 0.4s ease, color 0.2s;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+    .spot.vis { opacity: 1; transform: translateY(0); }
+    .dest-card:hover .spot { color: var(--dusk); }
+
+    .spot-wave {
+      font-size: 0.75rem;
+      opacity: 0.5;
+      flex-shrink: 0;
+      transition: opacity 0.2s;
+    }
+    .dest-card:hover .spot-wave { opacity: 0.9; }
+
+    /* Explore button */
+    .card-btn {
+      margin-top: 14px;
+      padding: 10px 0;
+      width: 100%;
+      border-radius: 10px;
+      border: 1.5px solid var(--sand-dark);
+      background: transparent;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-transform: uppercase;
+    }
+    .dest-card:hover .card-btn {
+      background: var(--ocean);
+      border-color: var(--ocean);
+      color: var(--white);
+    }
+
+    /* ── VIBE BANNER ── */
+    .vibe-banner {
+      background: linear-gradient(135deg, var(--dusk) 0%, #1a2d40 100%);
+      margin: 0;
+      padding: 5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .vibe-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234a7fa5' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .vibe-banner-inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+    .vibe-emoji-row {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.3em;
+      animation: floatRow 4s ease-in-out infinite;
+    }
+    @keyframes floatRow {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .vibe-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--sand);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+    .vibe-sub {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: var(--ocean-pale);
+      line-height: 1.8;
+    }
+
+    /* ── MODAL ── */
+    .modal-wrap {
+      position: fixed; inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .modal-wrap.open { opacity: 1; pointer-events: all; }
+
+    .modal-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(43,58,74,0.7);
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+    }
+
+    .modal {
+      position: relative; z-index: 1;
+      background: var(--white);
+      border-radius: 24px;
+      width: 100%; max-width: 540px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(30px) scale(0.97);
+      transition: transform 0.4s cubic-bezier(0.34,1.3,0.64,1);
+      scrollbar-width: none;
+      box-shadow: 0 40px 100px rgba(43,58,74,0.35);
+    }
+    .modal::-webkit-scrollbar { display: none; }
+    .modal-wrap.open .modal { transform: translateY(0) scale(1); }
+
+    .modal-img {
+      height: 260px; position: relative; overflow: hidden;
+      border-radius: 24px 24px 0 0;
+    }
+    .modal-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.8) saturate(1.1);
+    }
+    .modal-img::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(43,58,74,0.8) 100%);
+    }
+    .modal-img-text {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 1.5rem 2rem;
+      z-index: 1;
+    }
+    .modal-name {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+    .modal-tagline {
+      font-family: 'Libre Baskerville', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--ocean-pale);
+      margin-top: 4px;
+    }
+
+    .modal-body { padding: 1.8rem 2rem 2rem; }
+
+    .modal-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--coral);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .modal-label::after {
+      content: '';
+      flex: 1; height: 1px;
+      background: var(--sand-dark);
+    }
+
+    .modal-spots {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 1.8rem;
+    }
+    .modal-spot {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: var(--foam);
+      border-radius: 12px;
+      border: 1.5px solid var(--sand-dark);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .modal-spot:hover {
+      background: var(--sand);
+      border-color: var(--ocean-lt);
+    }
+    .modal-spot-num {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.1rem;
+      color: var(--ocean);
+      min-width: 1.5rem;
+    }
+    .modal-spot-name {
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .modal-close {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 12px;
+      background: var(--dusk);
+      color: var(--sand);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: background 0.22s, transform 0.2s;
+    }
+    .modal-close:hover { background: var(--ocean); transform: translateY(-1px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: rgba(245, 185, 170, 0.25);
+      border-top: 1px solid rgba(240, 170, 155, 0.3);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+    .footer-brand {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.6rem;
+      color: var(--coral);
+      margin-bottom: 0.5rem;
+    }
+    .footer-txt {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--sand); }
+    ::-webkit-scrollbar-thumb { background: var(--sand-deep); border-radius: 3px; }
+  </style>
 </head>
 <body>
 
-    <h1>Travel Planner</h1>
+<!-- Floating particles -->
+<div id="particles"></div>
 
-    <div class="container">
-        <h3>Where to next?</h3>
+<!-- Wave background -->
+<div class="wave-bg">
+  <div class="wave wave1">
+    <svg viewBox="0 0 900 160" preserveAspectRatio="none">
+      <path d="M0,80 C150,20 350,140 500,80 C650,20 750,140 900,80 L900,160 L0,160 Z" fill="#4a7fa5"/>
+    </svg>
+  </div>
+  <div class="wave wave2">
+    <svg viewBox="0 0 900 160" preserveAspectRatio="none">
+      <path d="M0,100 C200,40 400,160 600,100 C750,50 850,130 900,100 L900,160 L0,160 Z" fill="#7db5d4"/>
+    </svg>
+  </div>
+  <div class="wave wave3">
+    <svg viewBox="0 0 900 160" preserveAspectRatio="none">
+      <path d="M0,120 C100,70 300,150 500,120 C700,90 800,140 900,120 L900,160 L0,160 Z" fill="#b8d9ec"/>
+    </svg>
+  </div>
+</div>
 
-        <select id="place" onchange="showSuggestions()">
-            <option value="">-- Choose a Destination --</option>
-            <option value="Bangalore">Bangalore</option>
-            <option value="Chikmagalur">Chikmagalur</option>
-            <option value="Mysore">Mysore</option>
-            <option value="Coorg">Coorg</option>
-            <option value="Hampi">Hampi</option>
-        </select>
+<div class="page">
 
-        <ul id="suggestions"></ul>
+  <!-- Nav -->
+  <nav>
+    <div class="nav-brand">Drift Away</div>
+    <ul class="nav-links">
+      <li><a href="#destinations">Places</a></li>
+      <li><a href="#">North</a></li>
+      <li><a href="#">South</a></li>
+      <li><a href="#">Karnataka</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-horizon"></div>
+    <div class="hero-kicker">☀︎ &nbsp; Your next adventure awaits &nbsp; ☀︎</div>
+    <h1 class="hero-title">Find your<br><em>happy place</em></h1>
+    <div class="hero-wave-text">in Incredible India</div>
+    <p class="hero-sub">Slow mornings, golden afternoons, and starlit nights. Discover destinations where time gently melts away.</p>
+    <div class="mood-chips">
+      <div class="mood-chip active" onclick="heroNav('all', this)">🗺 Everywhere</div>
+      <div class="mood-chip" onclick="heroNav('north', this)">🏔 Mountains</div>
+      <div class="mood-chip" onclick="heroNav('south', this)">🌊 Coastline</div>
+      <div class="mood-chip" onclick="heroNav('karnataka', this)">🌿 Karnataka</div>
+    </div>
+    <div class="scroll-nudge">
+      <div class="nudge-shell">🐚</div>
+      scroll to explore
+    </div>
+  </section>
+
+  <!-- Vibe banner -->
+  <div class="vibe-banner">
+    <div class="vibe-banner-inner">
+      <div class="vibe-emoji-row">🌅 🌊 🌴</div>
+      <div class="vibe-title">"Not all those who wander are lost — some are just on holiday."</div>
+      <p class="vibe-sub">Pick a destination, pack light, and let India do the rest. From the snowy passes of Manali to the backwaters of Kerala.</p>
+    </div>
+  </div>
+
+  <!-- Destinations -->
+  <section class="section" id="destinations">
+    <div class="section-top">
+      <div>
+        <div class="section-eyebrow">Curated for you</div>
+        <h2 class="section-heading">Places to <em>drift</em> to</h2>
+      </div>
     </div>
 
-    <script>
-        function showSuggestions() {
-            const place = document.getElementById("place").value;
-            const suggestionsContainer = document.getElementById("suggestions");
-            const body = document.body;
+    <div class="filter-row">
+      <button class="f-pill on" onclick="setFilter('all',this)">All Places</button>
+      <button class="f-pill" onclick="setFilter('north',this)">North India</button>
+      <button class="f-pill" onclick="setFilter('south',this)">South India</button>
+      <button class="f-pill" onclick="setFilter('karnataka',this)">Karnataka</button>
+    </div>
 
-            // Destination Data
-            const data = {
-                Bangalore: ["ISKCON Temple", "Vidhana Soudha", "Bannerghatta Park"],
-                Chikmagalur: ["Mullayanagiri Peak", "Baba Budangiri", "Coffee Plantations"],
-                Mysore: ["Mysore Palace", "Chamundi Hills", "St. Philomena's Church"],
-                Coorg: ["Abbey Falls", "Dubare Elephant Camp", "Talakaveri"],
-                Hampi: ["Virupaksha Temple", "Vittala Stone Chariot", "Hemakuta Hill"]
-            };
+    <div class="card-grid" id="grid"></div>
+  </section>
 
-            // Background Images (using high-quality optimized links)
-            const backgrounds = {
-                Bangalore: "url('https://www.shutterstock.com/image-photo/vidhana-soudha-front-viewbangalore-india-600nw-2465031059.jpg')",
-                Chikmagalur: "url('https://www.gudlu.in/blog/wp-content/uploads/2023/10/kemmangundi-chikmagalur-entry-fee-timings-holidays-reviews-header-1024x512.jpg')",
-                Mysore: "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQugPP6Cx6daOdbMlQ3zsHWlVFblVk5MS0ow&s')",
-                Coorg: "url('data:image/jpeg;base64,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')",
-                Hampi: "url('https://images.travelandleisureasia.com/wp-content/uploads/sites/2/2025/02/12133950/Hampi-places-to-visit-FI.jpg?tr=w-900,f-jpg,pr-true')"
-            };
+  <footer>
+    <div class="footer-brand">Drift Away</div>
+    <p class="footer-txt">Made with 🌊 for wanderers · India Travel Guide · 2025</p>
+  </footer>
+</div>
 
-            // 1. Update Background
-            if (backgrounds[place]) {
-                body.style.backgroundImage = backgrounds[place];
-            } else {
-                // Reset to Mesh Gradient if no selection
-                body.style.backgroundImage = "radial-gradient(at 0% 0%, hsla(161,65%,85%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(188,78%,60%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(204,82%,70%,1) 0, transparent 50%)";
-            }
+<!-- Modal -->
+<div class="modal-wrap" id="modal">
+  <div class="modal-backdrop" onclick="closeModal()"></div>
+  <div class="modal">
+    <div class="modal-img">
+      <img id="mImg" src="" alt="" crossorigin="anonymous"
+        onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#a8d4f0,#f5bfb0)'"/>
+      <div class="modal-img-text">
+        <div class="modal-name" id="mName"></div>
+        <div class="modal-tagline" id="mTagline"></div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-label">Top spots to visit</div>
+      <div class="modal-spots" id="mSpots"></div>
+      <button class="modal-close" onclick="closeModal()">Back to exploring 🌊</button>
+    </div>
+  </div>
+</div>
 
-            // 2. Update Suggestions with Animation
-            suggestionsContainer.innerHTML = "";
+<script>
+/* ── PARTICLES ── */
+const COLORS = ['#f2b84b','#e8735a','#7db5d4','#b8d9ec','#f0a090'];
+const pc = document.getElementById('particles');
+for(let i=0;i<18;i++){
+  const p=document.createElement('div');
+  p.className='particle';
+  const size = Math.random()*8+4;
+  p.style.cssText=`
+    width:${size}px;height:${size}px;
+    left:${Math.random()*100}%;
+    background:${COLORS[Math.floor(Math.random()*COLORS.length)]};
+    animation-duration:${Math.random()*20+15}s;
+    animation-delay:${Math.random()*-20}s;
+    opacity:0;
+  `;
+  pc.appendChild(p);
+}
 
-            if (data[place]) {
-                data[place].forEach((item, index) => {
-                    const li = document.createElement("li");
-                    li.innerText = item;
-                    suggestionsContainer.appendChild(li);
+/* ── DATA ── */
+const DESTS = [
+  // NORTH
+  { id:'jaipur',      region:'north',    vibe:'🏰',
+    name:'Jaipur',            tagline:'The Pink City of Rajasthan',
+    image:'https://cdn.pixabay.com/photo/2021/04/06/11/22/hawa-mahal-6156123_1280.jpg',
+    places:['Hawa Mahal','Amber Fort','City Palace','Jantar Mantar'] },
 
-                    // Staggered fade-in effect
-                    setTimeout(() => {
-                        li.classList.add('show-li');
-                    }, index * 150); 
-                });
-            }
+  { id:'manali',      region:'north',    vibe:'🏔',
+    name:'Manali',            tagline:'Where mountains meet the clouds',
+    image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFRJjoiAICftM3tnDm-1jx78lwxvAYxTv_Dg&s',
+    places:['Rohtang Pass','Solang Valley','Hadimba Temple'] },
+
+  { id:'varanasi',    region:'north',    vibe:'🪔',
+    name:'Varanasi',          tagline:'Eternal city on the holy Ganges',
+    image:'https://t4.ftcdn.net/jpg/02/64/56/29/360_F_264562951_MQRFSoIUDhNi3RVJByRKGtD2sVtRJb4W.jpg',
+    places:['Dashashwamedh Ghat','Kashi Vishwanath','Sarnath'] },
+
+  { id:'rishikesh',   region:'north',    vibe:'🧘',
+    name:'Rishikesh',         tagline:'Yoga capital of the world',
+    image:'https://t4.ftcdn.net/jpg/07/57/15/39/360_F_757153920_ye2oNLnIzilUqn5OP0adQyp2WFVZp8N8.jpg',
+    places:['Laxman Jhula','Triveni Ghat','Neer Garh Falls'] },
+
+  { id:'agra',        region:'north',    vibe:'💫',
+    name:'Agra',              tagline:'An eternal love story in marble',
+    image:'https://c8.alamy.com/zooms/9/be799c9b4bad47a7bc2c27613fc78fac/2c7tndm.jpg',
+    places:['Taj Mahal','Agra Fort','Fatehpur Sikri'] },
+
+  // SOUTH
+  { id:'kerala',      region:'south',    vibe:'🌴',
+    name:'Kerala',            tagline:"God's own country — pure bliss",
+    image:'https://media.istockphoto.com/id/472909442/photo/backwaters-of-kerala.jpg?s=612x612&w=0&k=20&c=ibwRiZJZGcxG5MLWFUowcXM9XK3nZnklk9ZH1Qus3C4=',
+    places:['Alleppey Backwaters','Munnar Tea Hills','Varkala Cliffs'] },
+
+  { id:'madurai',     region:'south',    vibe:'🛕',
+    name:'Madurai',           tagline:'Temple city full of soul',
+    image:'https://s7ap1.scene7.com/is/image/incredibleindia/meenakshi-amman-temple-madurai-tamil-nadu-1-attr-hero?qlt=82&ts=1726654436739',
+    places:['Meenakshi Temple','Thirumalai Palace','Gandhi Museum'] },
+
+  { id:'ooty',        region:'south',    vibe:'🌸',
+    name:'Ooty',              tagline:'Queen of the misty Nilgiris',
+    image:'https://s3.india.com/wp-content/uploads/2024/07/Historical-Places-To-Visit-In-Ooty.jpg',
+    places:['Ooty Lake','Botanical Gardens','Nilgiri Mountain Railway'] },
+
+  { id:'pondicherry', region:'south',    vibe:'☕',
+    name:'Pondicherry',       tagline:'Slow cafés and French-kissed lanes',
+    image:'https://images.unsplash.com/photo-1566303052303-b2d2a9f16f0a?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9uZGljaGVycnklMjBiZWFjaHxlbnwwfHwwfHx8MA%3D%3D',
+    places:['French Quarter','Auroville','Paradise Beach'] },
+
+  // KARNATAKA
+  { id:'hampi',       region:'karnataka', vibe:'🗿',
+    name:'Hampi',             tagline:'UNESCO ruins lost in time',
+    image:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqvsR02VCVK1mFh3QjhZWTD0rpy2BAWKNtXA&s',
+    places:['Virupaksha Temple','Vittala Stone Chariot','Hemakuta Hill'] },
+
+  { id:'coorg',       region:'karnataka', vibe:'🌧',
+    name:'Coorg',             tagline:'Misty hills and coffee mornings',
+    image:'https://media3.thrillophilia.com/filestore/xwg5q060oir8fkrq4e96cclpydj0_shutterstock_1787989037.jpg?w=400&dpr=2',
+    places:['Abbey Falls','Dubare Elephant Camp','Talakaveri'] },
+
+  { id:'mysore',      region:'karnataka', vibe:'👑',
+    name:'Mysore',            tagline:'Royal city, timeless charm',
+    image:'https://cdn.pixabay.com/photo/2020/09/17/18/10/palace-5579991_1280.jpg',
+    places:['Mysore Palace','Chamundi Hills',"St. Philomena's Church"] },
+
+  { id:'chikmagalur', region:'karnataka', vibe:'☕',
+    name:'Chikmagalur',       tagline:'Wake up to misty coffee hills',
+    image:'https://www.shutterstock.com/image-photo/chikmagalur-karnataka-india-10072025-bababudangiri-600nw-2652595401.jpg',
+    places:['Mullayanagiri Peak','Baba Budangiri','Coffee Plantations'] },
+
+  { id:'dharwad',     region:'karnataka', vibe:'🎵',
+    name:'Dharwad',           tagline:'City of music, pedha & old-world soul',
+    image:'https://s7ap1.scene7.com/is/image/incredibleindia/1-chandramouleshwara-temple-dharwad-karnataka-2-city-hero?qlt=82&ts=1726720807177',
+    places:['Satar Manzil Palace','Chandramouleshwara Temple','Nrupatunga Betta','Famous Dharwad Pedha'] },
+];
+
+const RLABEL = { north:'North India', south:'South India', karnataka:'Karnataka' };
+const NUMS = ['1','2','3','4','5'];
+
+function buildGrid(filter='all') {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  DESTS.filter(d => filter==='all'||d.region===filter).forEach(d => {
+    const card = document.createElement('div');
+    card.className = 'dest-card';
+    card.dataset.region = d.region;
+    card.onclick = () => openModal(d);
+    card.innerHTML = `
+      <div class="card-img">
+        <img src="${d.image}" alt="${d.name}" loading="lazy" crossorigin="anonymous"
+          onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#a8d4f0,#f5bfb0)'"/>
+        <div class="region-tag ${d.region}">${RLABEL[d.region]}</div>
+        <div class="vibe-tag">${d.vibe}</div>
+        <div class="card-img-name">${d.name}</div>
+      </div>
+      <div class="card-body">
+        <div class="card-tagline">${d.tagline}</div>
+        <div class="card-spots">
+          ${d.places.slice(0,3).map((p,i)=>`
+            <div class="spot" style="transition-delay:${i*80}ms">
+              <span class="spot-wave">〰</span>
+              <span>${p}</span>
+            </div>
+          `).join('')}
+        </div>
+        <button class="card-btn">Explore this place</button>
+      </div>
+    `;
+    grid.appendChild(card);
+
+    const obs = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.querySelectorAll('.spot').forEach((el,i)=>{
+            setTimeout(()=>el.classList.add('vis'), i*90+80);
+          });
+          obs.unobserve(e.target);
         }
-    </script>
+      });
+    },{threshold:0.15});
+    obs.observe(card);
+  });
+}
 
+let current = 'all';
+function setFilter(f, btn) {
+  current = f;
+  document.querySelectorAll('.f-pill').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  buildGrid(f);
+}
+
+function heroNav(region, chip) {
+  document.querySelectorAll('.mood-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');
+  document.getElementById('destinations').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>{
+    current = region;
+    buildGrid(region);
+    document.querySelectorAll('.f-pill').forEach(b=>{
+      b.classList.toggle('on',
+        (region==='all' && b.textContent.includes('All')) ||
+        b.textContent.toLowerCase().includes(region)
+      );
+    });
+  }, 550);
+}
+
+function openModal(d) {
+  document.getElementById('mImg').src = d.image;
+  document.getElementById('mName').textContent = d.name;
+  document.getElementById('mTagline').textContent = d.tagline;
+  document.getElementById('mSpots').innerHTML = d.places.map((p,i)=>`
+    <div class="modal-spot">
+      <div class="modal-spot-num">${i+1}</div>
+      <div class="modal-spot-name">${p}</div>
+    </div>
+  `).join('');
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+buildGrid();
+</script>
 </body>
 </html>
