@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xplor - Map</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #1a1a2e;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* NAVBAR */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            animation: spinSlow 8s linear infinite;
+        }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: white;
+        }
+
+        .logo-text span { color: #ff9933; }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover { color: white; }
+        .nav-links a.active { color: #ff9933; }
+
+        .nav-btn {
+            background: #ff9933 !important;
+            color: white !important;
+            padding: 8px 22px;
+            border-radius: 20px;
+        }
+
+        /* MAIN LAYOUT */
+        .main {
+            display: flex;
+            height: 100vh;
+            padding-top: 65px;
+        }
+
+        /* LEFT PANEL */
+        .left-panel {
+            width: 320px;
+            background: #16213e;
+            border-right: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 15px;
+            overflow-y: auto;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .panel-title span { color: #ff9933; }
+
+        /* SEARCH */
+        .search-box {
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 6px;
+            border-radius: 12px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 8px 10px;
+            font-size: 13px;
+            color: white;
+            flex: 1;
+        }
+
+        .search-box input::placeholder { color: #555; }
+
+        .search-box button {
+            background: #ff9933;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .search-box button:hover { background: #e8851f; }
+
+        /* POPULAR PLACES */
+        .section-label {
+            font-size: 11px;
+            color: #555;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        .place-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .place-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .place-item:hover {
+            background: rgba(255,153,51,0.1);
+            border-color: rgba(255,153,51,0.2);
+        }
+
+        .place-item .place-icon { font-size: 20px; }
+
+        .place-item .place-info { flex: 1; }
+
+        .place-item .place-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .place-item .place-state {
+            font-size: 11px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        /* RESULT CARD */
+        .result-card {
+            display: none;
+            background: rgba(255,153,51,0.08);
+            border: 1px solid rgba(255,153,51,0.2);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .result-card h3 {
+            font-size: 15px;
+            color: #ff9933;
+            margin-bottom: 5px;
+        }
+
+        .result-card p {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* MAP */
+        #map {
+            flex: 1;
+            height: 100%;
+            filter: brightness(0.85) saturate(0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a class="logo" href="index.html">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" stroke="#ff9933" stroke-width="2" stroke-dasharray="6 3"/>
+                <circle cx="50" cy="50" r="30" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <polygon points="50,10 55,50 50,45 45,50" fill="#ff9933"/>
+                <polygon points="50,90 55,50 50,55 45,50" fill="rgba(255,255,255,0.3)"/>
+                <polygon points="10,50 50,45 55,50 50,55" fill="rgba(255,255,255,0.3)"/>
+                <polygon points="90,50 50,45 45,50 50,55" fill="rgba(255,255,255,0.15)"/>
+                <circle cx="50" cy="50" r="5" fill="#ff9933"/>
+            </svg>
+            <div class="logo-text">XPL<span>O</span>R</div>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="map.html" class="active">Map</a></li>
+            <li><a href="places.html">Places</a></li>
+            <li><a href="budget.html">Budget</a></li>
+            <li><a href="suggestion.html" class="nav-btn">Suggest ✨</a></li>
+        </ul>
+    </nav>
+
+    <div class="main">
+
+        <!-- LEFT PANEL -->
+        <div class="left-panel">
+            <div class="panel-title">🗺️ Explore <span>India</span></div>
+
+            <!-- SEARCH -->
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search city, place...">
+                <button onclick="searchPlace()">Go →</button>
+            </div>
+
+            <!-- RESULT -->
+            <div class="result-card" id="resultCard">
+                <h3 id="resultName"></h3>
+                <p id="resultInfo"></p>
+            </div>
+
+            <!-- POPULAR PLACES -->
+            <div class="section-label">Popular Destinations</div>
+            <div class="place-list">
+                <div class="place-item" onclick="goTo(28.6139, 77.2090, 'New Delhi', 'Capital of India')">
+                    <div class="place-icon">🕌</div>
+                    <div class="place-info">
+                        <div class="place-name">New Delhi</div>
+                        <div class="place-state">Delhi</div>
+                    </div>
+                </div>
+                <div class="place-item" onclick="goTo(19.0760, 72.8777, 'Mumbai', 'City of Dreams')">
+                    <div class="place-icon">🌆</div>
+                    <div class="place-info">
+                        <div class="place-name">Mumbai</div>
+                        <div class="place-state">Maharashtra</div>
+                    </div>
+                </div>
+                <div class="place-item" onclick="goTo(15.2993, 74.1240, 'Goa', 'Beach Paradise')">
+                    <div class="place-icon">🏖️</div>
+                    <div class="place-info">
+                        <div class="place-name">Goa</div>
+                        <div class="place-state">Goa</div>
+                    </div>
+                </div>
+                <div class="place-item" onclick="goTo(27.1767, 78.0081, 'Agra', 'Home of Taj Mahal')">
+                    <div class="place-icon">🕍</div>
+                    <div class="place-info">
+                        <div class="place-name">Agra</div>
+                        <div class="place-state">Uttar Pradesh</div>
+                    </div>
+                </div>
+                <div class="place-item" onclick="goTo(26.9124, 75.7873, 'Jaipur', 'The Pink City')">
+                    <div class="place-icon">🏰</div>
+                    <div class="place-info">
+                        <div class="place-name">Jaipur</div>
+                        <div class="place-state">Rajasthan</div>
+                    </div>
+                </div>
+                <div class="place-item" onclick="goTo(10.8505, 76.2711, 'Kerala', 'Gods Own Country')">
+                    <div class="place-icon">🌴</div>
+                    <div class="place-info">
+                        <div class="place-name">Kerala</div>
+                        <div class="place-state">Kerala</div>
+                    </div>
+                </div>
+                <div class="place-item" onclick="goTo(12.2958, 76.6394, 'Mysuru', 'City of Palaces')">
+                    <div class="place-icon">👑</div>
+                    <div class="place-info">
+                        <div class="place-name">Mysuru</div>
+                        <div class="place-state">Karnataka</div>
+                    </div>
+                </div>
+                <div class="place-item" onclick="goTo(27.0238, 88.2627, 'Darjeeling', 'Queen of Hills')">
+                    <div class="place-icon">⛰️</div>
+                    <div class="place-info">
+                        <div class="place-name">Darjeeling</div>
+                        <div class="place-state">West Bengal</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAP -->
+        <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Initialize map centered on India
+        var map = L.map('map').setView([20.5937, 78.9629], 5);
+
+        // Dark tile layer
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '© OpenStreetMap © CARTO',
+            maxZoom: 18
+        }).addTo(map);
+
+        // Custom marker
+        var customIcon = L.divIcon({
+            html: '📍',
+            className: '',
+            iconSize: [30, 30],
+            iconAnchor: [15, 30]
+        });
+
+        var currentMarker = null;
+
+        // Go to location
+        function goTo(lat, lng, name, info) {
+            map.flyTo([lat, lng], 12, { duration: 1.5 });
+
+            if(currentMarker) map.removeLayer(currentMarker);
+
+            currentMarker = L.marker([lat, lng], { icon: customIcon })
+                .addTo(map)
+                .bindPopup(`<b>${name}</b><br>${info}`)
+                .openPopup();
+
+            document.getElementById("resultCard").style.display = "block";
+            document.getElementById("resultName").innerHTML = "📍 " + name;
+            document.getElementById("resultInfo").innerHTML = info;
+        }
+
+        // Search using OpenStreetMap Nominatim
+        async function searchPlace() {
+            let query = document.getElementById("searchInput").value;
+            if(!query) { alert("Please enter a place!"); return; }
+
+            let response = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}+India&format=json&limit=1`);
+            let data = await response.json();
+
+            if(data.length > 0) {
+                let place = data[0];
+                goTo(parseFloat(place.lat), parseFloat(place.lon), query, place.display_name.split(',')[0]);
+            } else {
+                alert("Place not found! Try another name.");
+            }
+        }
+
+        // Search on Enter
+        document.getElementById("searchInput").addEventListener("keypress", function(e) {
+            if(e.key === "Enter") searchPlace();
+        });
+    </script>
+
+</body>
+</html>
