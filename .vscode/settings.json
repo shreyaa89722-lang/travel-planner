@@ -1,3 +1,4 @@
 {
-    "liveServer.settings.multiRootWorkspaceName": "travel-planner"
+    "liveServer.settings.multiRootWorkspaceName": "travel-planner",
+    "liveServer.settings.port": 5501
 }
