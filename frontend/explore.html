@@ -1,0 +1,591 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xplor - Explore India</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #fffdf5;
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background: rgba(255,253,245,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,153,51,0.15);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(255,153,51,0.08);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            animation: spinSlow 8s linear infinite;
+        }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #1a1a2e;
+        }
+
+        .logo-text span { color: #ff9933; }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover { color: #1a1a2e; }
+        .nav-links a.active { color: #ff9933; }
+
+        .nav-btn {
+            background: #ff9933 !important;
+            color: white !important;
+            padding: 8px 22px;
+            border-radius: 20px;
+        }
+
+        /* PAGE */
+        .page { padding: 90px 50px 50px; }
+
+        /* HERO SECTION */
+        .explore-hero {
+            text-align: center;
+            padding: 40px 20px 35px;
+            background: linear-gradient(135deg, #fffdf5, #fff8e7);
+            border-radius: 24px;
+            margin-bottom: 40px;
+            border: 1.5px solid rgba(255,153,51,0.1);
+        }
+
+        .explore-hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: #1a1a2e;
+        }
+
+        .explore-hero h1 span { color: #ff9933; }
+
+        .explore-hero p {
+            color: #aaa;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* SEARCH BAR */
+        .search-box {
+            display: flex;
+            gap: 8px;
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.2);
+            padding: 7px;
+            border-radius: 50px;
+            max-width: 550px;
+            margin: 0 auto;
+            box-shadow: 0 5px 25px rgba(255,153,51,0.1);
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #1a1a2e;
+            flex: 1;
+        }
+
+        .search-box input::placeholder { color: #bbb; }
+
+        .search-box button {
+            background: #ff9933;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-box button:hover { background: #e8851f; }
+
+        /* SECTION TITLE */
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+        }
+
+        .section-title span { color: #ff9933; }
+
+        /* CATEGORY CARDS */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 45px;
+        }
+
+        .category-card {
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.1);
+            border-radius: 18px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.04);
+        }
+
+        .category-card:hover, .category-card.active {
+            background: #fff8e7;
+            border-color: rgba(255,153,51,0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(255,153,51,0.15);
+        }
+
+        .category-card .cat-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .category-card .cat-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 3px;
+        }
+
+        .category-card .cat-count {
+            font-size: 11px;
+            color: #bbb;
+        }
+
+        /* FILTER BY STATE */
+        .state-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 35px;
+        }
+
+        .state-btn {
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.15);
+            color: #888;
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .state-btn:hover, .state-btn.active {
+            background: #fff8e7;
+            border-color: rgba(255,153,51,0.4);
+            color: #ff9933;
+        }
+
+        /* FEATURED */
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .featured-card {
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.1);
+            border-radius: 18px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        }
+
+        .featured-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,153,51,0.3);
+            box-shadow: 0 10px 30px rgba(255,153,51,0.12);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, #fff8e7, #ffe0b2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 55px;
+            position: relative;
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: white;
+            color: #ff9933;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card-info { padding: 15px; }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 5px;
+        }
+
+        .card-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .card-rating {
+            background: rgba(255,153,51,0.1);
+            color: #ff9933;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .card-location {
+            font-size: 12px;
+            color: #bbb;
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,153,51,0.08);
+        }
+
+        .card-state {
+            font-size: 12px;
+            color: #bbb;
+        }
+
+        .explore-btn {
+            background: #ff9933;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .explore-btn:hover {
+            background: #e8851f;
+            transform: scale(1.05);
+        }
+
+        /* NO RESULTS */
+        .no-results {
+            display: none;
+            text-align: center;
+            padding: 60px;
+            color: #bbb;
+        }
+
+        .no-results .icon { font-size: 50px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a class="logo" href="index.html">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="45" stroke="#ff9933" stroke-width="2" stroke-dasharray="6 3"/>
+                <circle cx="50" cy="50" r="30" stroke="rgba(255,153,51,0.3)" stroke-width="1"/>
+                <polygon points="50,10 55,50 50,45 45,50" fill="#ff9933"/>
+                <polygon points="50,90 55,50 50,55 45,50" fill="rgba(255,153,51,0.3)"/>
+                <polygon points="10,50 50,45 55,50 50,55" fill="rgba(255,153,51,0.3)"/>
+                <polygon points="90,50 50,45 45,50 50,55" fill="rgba(255,153,51,0.15)"/>
+                <circle cx="50" cy="50" r="5" fill="#ff9933"/>
+            </svg>
+            <div class="logo-text">XPL<span>O</span>R</div>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="explore.html" class="active">Explore</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="places.html">Places</a></li>
+            <li><a href="budget.html">Budget</a></li>
+            <li><a href="suggestion.html" class="nav-btn">Suggest ✨</a></li>
+        </ul>
+    </nav>
+
+    <div class="page">
+
+        <!-- HERO -->
+        <div class="explore-hero">
+            <h1>Explore <span>Incredible</span> India</h1>
+            <p>Discover destinations by category, state or search anything you want!</p>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍  Search anything... Beaches, Food, Adventure...">
+                <button onclick="searchDestinations()">Search →</button>
+            </div>
+        </div>
+
+        <!-- CATEGORIES -->
+        <div class="section-title">Browse by <span>Category</span></div>
+        <div class="categories-grid">
+            <div class="category-card active" onclick="filterByCategory('all', this)">
+                <span class="cat-icon">🌍</span>
+                <div class="cat-name">All</div>
+                <div class="cat-count">24 places</div>
+            </div>
+            <div class="category-card" onclick="filterByCategory('beach', this)">
+                <span class="cat-icon">🏖️</span>
+                <div class="cat-name">Beaches</div>
+                <div class="cat-count">5 places</div>
+            </div>
+            <div class="category-card" onclick="filterByCategory('mountain', this)">
+                <span class="cat-icon">⛰️</span>
+                <div class="cat-name">Mountains</div>
+                <div class="cat-count">4 places</div>
+            </div>
+            <div class="category-card" onclick="filterByCategory('heritage', this)">
+                <span class="cat-icon">🏛️</span>
+                <div class="cat-name">Heritage</div>
+                <div class="cat-count">5 places</div>
+            </div>
+            <div class="category-card" onclick="filterByCategory('nature', this)">
+                <span class="cat-icon">🌿</span>
+                <div class="cat-name">Nature</div>
+                <div class="cat-count">4 places</div>
+            </div>
+            <div class="category-card" onclick="filterByCategory('city', this)">
+                <span class="cat-icon">🌆</span>
+                <div class="cat-name">Cities</div>
+                <div class="cat-count">4 places</div>
+            </div>
+            <div class="category-card" onclick="filterByCategory('food', this)">
+                <span class="cat-icon">🍛</span>
+                <div class="cat-name">Food</div>
+                <div class="cat-count">3 places</div>
+            </div>
+            <div class="category-card" onclick="filterByCategory('adventure', this)">
+                <span class="cat-icon">🧗</span>
+                <div class="cat-name">Adventure</div>
+                <div class="cat-count">3 places</div>
+            </div>
+        </div>
+
+        <!-- FILTER BY STATE -->
+        <div class="section-title">Filter by <span>State</span></div>
+        <div class="state-filters">
+            <button class="state-btn active" onclick="filterByState('all', this)">🇮🇳 All States</button>
+            <button class="state-btn" onclick="filterByState('Goa', this)">Goa</button>
+            <button class="state-btn" onclick="filterByState('Rajasthan', this)">Rajasthan</button>
+            <button class="state-btn" onclick="filterByState('Kerala', this)">Kerala</button>
+            <button class="state-btn" onclick="filterByState('Karnataka', this)">Karnataka</button>
+            <button class="state-btn" onclick="filterByState('Himachal Pradesh', this)">Himachal Pradesh</button>
+            <button class="state-btn" onclick="filterByState('Uttar Pradesh', this)">Uttar Pradesh</button>
+            <button class="state-btn" onclick="filterByState('Maharashtra', this)">Maharashtra</button>
+            <button class="state-btn" onclick="filterByState('Gujarat', this)">Gujarat</button>
+            <button class="state-btn" onclick="filterByState('West Bengal', this)">West Bengal</button>
+        </div>
+
+        <!-- FEATURED DESTINATIONS -->
+        <div class="section-title" id="resultsTitle">✨ <span>Featured</span> Destinations</div>
+
+        <div class="no-results" id="noResults">
+            <div class="icon">🔍</div>
+            <p>No destinations found! Try another search.</p>
+        </div>
+
+        <div class="featured-grid" id="featuredGrid"></div>
+
+    </div>
+
+    <script>
+        const destinations = [
+            { name: "Goa Beach", state: "Goa", desc: "Famous for stunning beaches, nightlife and Portuguese heritage.", rating: "4.8", category: "beach", icon: "🏖️", food: "Seafood & Goan curry" },
+            { name: "Taj Mahal", state: "Uttar Pradesh", desc: "One of the Seven Wonders of the World, symbol of eternal love.", rating: "4.9", category: "heritage", icon: "🕌", food: "Agra Petha & Mughlai" },
+            { name: "Munnar", state: "Kerala", desc: "Breathtaking tea gardens and misty hills in Gods Own Country.", rating: "4.7", category: "nature", icon: "🌿", food: "Kerala Sadya & Appam" },
+            { name: "Jaipur", state: "Rajasthan", desc: "The Pink City with magnificent forts, palaces and vibrant culture.", rating: "4.6", category: "city", icon: "🏰", food: "Dal Baati & Laal Maas" },
+            { name: "Himalayas", state: "Himachal Pradesh", desc: "Majestic snow-capped mountains perfect for trekking and adventure.", rating: "4.9", category: "mountain", icon: "⛰️", food: "Sidu & Dham" },
+            { name: "Hampi", state: "Karnataka", desc: "Ancient ruins of the Vijayanagara Empire, UNESCO World Heritage Site.", rating: "4.7", category: "heritage", icon: "🏛️", food: "Jolada Rotti & Bisi Bele Bath" },
+            { name: "Andaman Islands", state: "Andaman & Nicobar", desc: "Crystal clear waters, coral reefs and pristine white sand beaches.", rating: "4.8", category: "beach", icon: "🌊", food: "Fresh Seafood & Coconut dishes" },
+            { name: "Manali", state: "Himachal Pradesh", desc: "Adventure capital of India with snow, rivers and stunning valleys.", rating: "4.7", category: "adventure", icon: "🏔️", food: "Trout fish & Sidu" },
+            { name: "Varanasi", state: "Uttar Pradesh", desc: "One of worlds oldest cities, spiritual capital on the Ganges.", rating: "4.6", category: "heritage", icon: "🕍", food: "Banarasi Paan & Kachori" },
+            { name: "Mysuru", state: "Karnataka", desc: "City of Palaces known for royal heritage and Dasara festival.", rating: "4.7", category: "city", icon: "👑", food: "Mysore Pak & Masala Dosa" },
+            { name: "Rann of Kutch", state: "Gujarat", desc: "Worlds largest salt desert, magical especially during full moon.", rating: "4.8", category: "nature", icon: "🌅", food: "Dhokla & Fafda" },
+            { name: "Coorg", state: "Karnataka", desc: "Scotland of India — lush coffee plantations and misty valleys.", rating: "4.6", category: "nature", icon: "☕", food: "Pandi Curry & Kadambuttu" },
+            { name: "Rishikesh", state: "Uttar Pradesh", desc: "Adventure & spiritual hub — rafting, bungee jumping and yoga.", rating: "4.7", category: "adventure", icon: "🌊", food: "Aloo Puri & Lassi" },
+            { name: "Mumbai", state: "Maharashtra", desc: "City of Dreams — Bollywood, beaches and amazing street food.", rating: "4.6", category: "city", icon: "🌆", food: "Vada Pav & Pav Bhaji" },
+            { name: "Darjeeling", state: "West Bengal", desc: "Queen of Hills with stunning tea gardens and Himalayan views.", rating: "4.7", category: "mountain", icon: "🍵", food: "Darjeeling Tea & Momos" },
+            { name: "Kerala Backwaters", state: "Kerala", desc: "Serene houseboat rides through lush green backwater canals.", rating: "4.8", category: "nature", icon: "🛶", food: "Karimeen & Rice Puttu" },
+            { name: "Jodhpur", state: "Rajasthan", desc: "The Blue City with magnificent Mehrangarh Fort and desert vibes.", rating: "4.6", category: "city", icon: "🏯", food: "Mirchi Bada & Mawa Kachori" },
+            { name: "Spiti Valley", state: "Himachal Pradesh", desc: "Cold desert mountain valley — one of Indias most scenic drives.", rating: "4.9", category: "adventure", icon: "🏕️", food: "Thukpa & Tsampa" },
+            { name: "Vaarkala Beach", state: "Kerala", desc: "Dramatic cliff beach with natural springs and spiritual vibes.", rating: "4.7", category: "beach", icon: "🌴", food: "Kerala Fish Curry & Toddy" },
+            { name: "Amritsar", state: "Punjab", desc: "Home of the Golden Temple — spiritual, historical and cultural.", rating: "4.9", category: "heritage", icon: "🛕", food: "Amritsari Kulcha & Lassi" },
+            { name: "Puducherry", state: "Puducherry", desc: "French Riviera of the East — colonial charm and serene beaches.", rating: "4.6", category: "beach", icon: "🇫🇷", food: "French Crepes & Seafood" },
+            { name: "Ooty", state: "Tamil Nadu", desc: "Queen of Hill Stations with beautiful gardens and toy train ride.", rating: "4.5", category: "mountain", icon: "🚂", food: "Ooty Chocolate & Varkey" },
+            { name: "Delhi Street Food", state: "Delhi", desc: "Indias street food capital — Chandni Chowk to Connaught Place.", rating: "4.8", category: "food", icon: "🍢", food: "Chole Bhature & Paranthe" },
+            { name: "Hyderabad Food Tour", state: "Telangana", desc: "City of Biryani — explore the best food lanes in Old City.", rating: "4.9", category: "food", icon: "🍛", food: "Hyderabadi Biryani & Haleem" },
+        ];
+
+        let currentCategory = 'all';
+        let currentState = 'all';
+        let currentSearch = '';
+
+        function renderDestinations() {
+            let filtered = destinations;
+
+            if(currentCategory !== 'all') {
+                filtered = filtered.filter(d => d.category === currentCategory);
+            }
+
+            if(currentState !== 'all') {
+                filtered = filtered.filter(d => d.state === currentState);
+            }
+
+            if(currentSearch) {
+                filtered = filtered.filter(d =>
+                    d.name.toLowerCase().includes(currentSearch) ||
+                    d.state.toLowerCase().includes(currentSearch) ||
+                    d.desc.toLowerCase().includes(currentSearch) ||
+                    d.category.toLowerCase().includes(currentSearch) ||
+                    d.food.toLowerCase().includes(currentSearch)
+                );
+            }
+
+            const grid = document.getElementById("featuredGrid");
+            const noResults = document.getElementById("noResults");
+
+            if(filtered.length === 0) {
+                grid.innerHTML = '';
+                noResults.style.display = "block";
+                return;
+            }
+
+            noResults.style.display = "none";
+            grid.innerHTML = filtered.map(d => `
+                <div class="featured-card">
+                    <div class="card-img">
+                        ${d.icon}
+                        <div class="card-tag">${d.category}</div>
+                    </div>
+                    <div class="card-info">
+                        <div class="card-top">
+                            <div class="card-name">${d.name}</div>
+                            <div class="card-rating">⭐ ${d.rating}</div>
+                        </div>
+                        <div class="card-location">📍 ${d.state}</div>
+                        <div class="card-desc">${d.desc}</div>
+                        <div class="card-footer">
+                            <div class="card-state">🍽️ ${d.food}</div>
+                            <button class="explore-btn" onclick="explorePlace('${d.name}')">Explore →</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterByCategory(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById("resultsTitle").innerHTML = cat === 'all' ? '✨ <span>Featured</span> Destinations' : `✨ <span>${cat.charAt(0).toUpperCase() + cat.slice(1)}</span> Destinations`;
+            renderDestinations();
+        }
+
+        function filterByState(state, btn) {
+            currentState = state;
+            document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderDestinations();
+        }
+
+        function searchDestinations() {
+            currentSearch = document.getElementById("searchInput").value.toLowerCase();
+            if(currentSearch) {
+                document.getElementById("resultsTitle").innerHTML = `🔍 Results for "<span>${document.getElementById("searchInput").value}</span>"`;
+            } else {
+                document.getElementById("resultsTitle").innerHTML = '✨ <span>Featured</span> Destinations';
+            }
+            renderDestinations();
+        }
+
+        function explorePlace(name) {
+            window.location.href = `map.html?place=${encodeURIComponent(name)}`;
+        }
+
+        document.getElementById("searchInput").addEventListener("keypress", function(e) {
+            if(e.key === "Enter") searchDestinations();
+        });
+
+        // Load on start
+        renderDestinations();
+    </script>
+
+</body>
+</html>
