@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,8 +10,8 @@
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: #1a1a2e;
-            color: white;
+            background: #fffdf5;
+            color: #1a1a2e;
             min-height: 100vh;
         }
 
@@ -20,13 +21,14 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 50px;
-            background: rgba(26, 26, 46, 0.95);
+            background: rgba(255,253,245,0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,153,51,0.15);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 2px 20px rgba(255,153,51,0.08);
         }
 
         .logo {
@@ -51,7 +53,7 @@
             font-size: 20px;
             font-weight: 800;
             letter-spacing: 2px;
-            color: white;
+            color: #1a1a2e;
         }
 
         .logo-text span { color: #ff9933; }
@@ -64,14 +66,14 @@
         }
 
         .nav-links a {
-            color: #aaa;
+            color: #888;
             text-decoration: none;
             font-size: 14px;
             transition: color 0.3s;
             letter-spacing: 1px;
         }
 
-        .nav-links a:hover { color: white; }
+        .nav-links a:hover { color: #1a1a2e; }
         .nav-links a.active { color: #ff9933; }
 
         .nav-btn {
@@ -81,45 +83,48 @@
             border-radius: 20px;
         }
 
-        /* PAGE CONTENT */
+        /* PAGE */
         .page {
             padding: 90px 50px 50px;
         }
 
         .page-header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
+            padding-top: 20px;
         }
 
         .page-header h1 {
-            font-size: 40px;
+            font-size: 38px;
             font-weight: 800;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            color: #1a1a2e;
         }
 
         .page-header h1 span { color: #ff9933; }
 
         .page-header p {
-            color: #666;
-            font-size: 15px;
+            color: #aaa;
+            font-size: 14px;
         }
 
         /* SEARCH */
         .search-section {
             display: flex;
             justify-content: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .search-box {
             display: flex;
             gap: 8px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 8px;
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.2);
+            padding: 7px;
             border-radius: 50px;
             width: 100%;
             max-width: 550px;
+            box-shadow: 0 5px 25px rgba(255,153,51,0.08);
         }
 
         .search-box input {
@@ -128,11 +133,11 @@
             outline: none;
             padding: 10px 15px;
             font-size: 14px;
-            color: white;
+            color: #1a1a2e;
             flex: 1;
         }
 
-        .search-box input::placeholder { color: #555; }
+        .search-box input::placeholder { color: #bbb; }
 
         .search-box button {
             background: #ff9933;
@@ -147,7 +152,7 @@
 
         .search-box button:hover { background: #e8851f; }
 
-        /* FILTER TABS */
+        /* FILTERS */
         .filters {
             display: flex;
             justify-content: center;
@@ -157,29 +162,21 @@
         }
 
         .filter-btn {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.07);
-            color: #aaa;
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.15);
+            color: #888;
             padding: 8px 20px;
             border-radius: 20px;
             font-size: 13px;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
         .filter-btn:hover, .filter-btn.active {
-            background: rgba(255,153,51,0.15);
-            border-color: rgba(255,153,51,0.3);
+            background: #fff8e7;
+            border-color: rgba(255,153,51,0.4);
             color: #ff9933;
-        }
-
-        /* LOADING */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            color: #666;
-            font-size: 14px;
         }
 
         /* NO RESULTS */
@@ -187,49 +184,53 @@
             display: none;
             text-align: center;
             padding: 60px;
-            color: #555;
+            color: #bbb;
         }
 
         .no-results .icon { font-size: 50px; margin-bottom: 15px; }
 
+        /* SECTION LABEL */
+        .section-label {
+            font-size: 11px;
+            color: #bbb;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
         /* PLACES GRID */
         .places-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
             gap: 20px;
         }
 
         /* PLACE CARD */
         .place-card {
-            background: #16213e;
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px;
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.1);
+            border-radius: 18px;
             overflow: hidden;
             transition: all 0.3s;
             cursor: pointer;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
         }
 
         .place-card:hover {
             transform: translateY(-5px);
-            border-color: rgba(255,153,51,0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border-color: rgba(255,153,51,0.3);
+            box-shadow: 0 10px 30px rgba(255,153,51,0.12);
         }
 
         .place-img {
             width: 100%;
-            height: 180px;
-            object-fit: cover;
-            background: linear-gradient(135deg, rgba(255,153,51,0.2), rgba(19,136,8,0.2));
+            height: 160px;
+            background: linear-gradient(135deg, #fff8e7, #ffe0b2);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 60px;
-        }
-
-        .place-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            font-size: 55px;
         }
 
         .place-info {
@@ -240,17 +241,17 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .place-name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
-            color: white;
+            color: #1a1a2e;
         }
 
         .place-rating {
-            background: rgba(255,153,51,0.15);
+            background: rgba(255,153,51,0.1);
             color: #ff9933;
             padding: 3px 10px;
             border-radius: 20px;
@@ -261,7 +262,7 @@
 
         .place-location {
             font-size: 12px;
-            color: #666;
+            color: #bbb;
             margin-bottom: 8px;
         }
 
@@ -277,34 +278,21 @@
             justify-content: space-between;
             align-items: center;
             padding-top: 10px;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            border-top: 1px solid rgba(255,153,51,0.08);
         }
 
         .place-distance {
             font-size: 12px;
-            color: #555;
+            color: #bbb;
         }
 
         .place-tag {
-            background: rgba(255,255,255,0.05);
-            color: #aaa;
+            background: #fff8e7;
+            color: #ff9933;
             padding: 3px 10px;
             border-radius: 10px;
             font-size: 11px;
-        }
-
-        /* DEFAULT PLACES */
-        .default-section {
-            margin-bottom: 15px;
-        }
-
-        .section-label {
-            font-size: 11px;
-            color: #555;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            text-align: center;
+            border: 1px solid rgba(255,153,51,0.15);
         }
     </style>
 </head>
@@ -315,11 +303,11 @@
         <a class="logo" href="index.html">
             <svg class="logo-icon" viewBox="0 0 100 100" fill="none">
                 <circle cx="50" cy="50" r="45" stroke="#ff9933" stroke-width="2" stroke-dasharray="6 3"/>
-                <circle cx="50" cy="50" r="30" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <circle cx="50" cy="50" r="30" stroke="rgba(255,153,51,0.3)" stroke-width="1"/>
                 <polygon points="50,10 55,50 50,45 45,50" fill="#ff9933"/>
-                <polygon points="50,90 55,50 50,55 45,50" fill="rgba(255,255,255,0.3)"/>
-                <polygon points="10,50 50,45 55,50 50,55" fill="rgba(255,255,255,0.3)"/>
-                <polygon points="90,50 50,45 45,50 50,55" fill="rgba(255,255,255,0.15)"/>
+                <polygon points="50,90 55,50 50,55 45,50" fill="rgba(255,153,51,0.3)"/>
+                <polygon points="10,50 50,45 55,50 50,55" fill="rgba(255,153,51,0.3)"/>
+                <polygon points="90,50 50,45 45,50 50,55" fill="rgba(255,153,51,0.15)"/>
                 <circle cx="50" cy="50" r="5" fill="#ff9933"/>
             </svg>
             <div class="logo-text">XPL<span>O</span>R</div>
@@ -340,7 +328,6 @@
             <p>Search and explore the most beautiful destinations across India</p>
         </div>
 
-        <!-- SEARCH -->
         <div class="search-section">
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="🔍  Search places... Goa, Munnar, Hampi...">
@@ -348,7 +335,6 @@
             </div>
         </div>
 
-        <!-- FILTERS -->
         <div class="filters">
             <button class="filter-btn active" onclick="filterPlaces('all', this)">🌍 All</button>
             <button class="filter-btn" onclick="filterPlaces('beach', this)">🏖️ Beaches</button>
@@ -358,26 +344,17 @@
             <button class="filter-btn" onclick="filterPlaces('city', this)">🌆 Cities</button>
         </div>
 
-        <!-- LOADING -->
-        <div class="loading" id="loading">🔍 Searching places...</div>
-
-        <!-- NO RESULTS -->
         <div class="no-results" id="noResults">
             <div class="icon">🗺️</div>
             <p>No places found! Try another search.</p>
         </div>
 
-        <!-- DEFAULT LABEL -->
-        <div class="default-section">
-            <div class="section-label" id="sectionLabel">✨ Popular Destinations in India</div>
-        </div>
+        <div class="section-label" id="sectionLabel">✨ Popular Destinations in India</div>
 
-        <!-- PLACES GRID -->
         <div class="places-grid" id="placesGrid"></div>
     </div>
 
     <script>
-        // Default places data
         const allPlaces = [
             { name: "Goa Beach", location: "Goa", desc: "Famous for stunning beaches, nightlife and Portuguese heritage.", rating: "4.8", distance: "1,400 km from Delhi", tag: "beach", icon: "🏖️" },
             { name: "Taj Mahal", location: "Agra, Uttar Pradesh", desc: "One of the Seven Wonders of the World, a symbol of eternal love.", rating: "4.9", distance: "200 km from Delhi", tag: "heritage", icon: "🕌" },
@@ -395,7 +372,6 @@
 
         let currentFilter = 'all';
 
-        // Render places
         function renderPlaces(places) {
             const grid = document.getElementById("placesGrid");
             const noResults = document.getElementById("noResults");
@@ -426,43 +402,32 @@
             `).join('');
         }
 
-        // Filter places
         function filterPlaces(type, btn) {
             currentFilter = type;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
             let filtered = type === 'all' ? allPlaces : allPlaces.filter(p => p.tag === type);
             document.getElementById("sectionLabel").innerHTML = type === 'all' ? '✨ Popular Destinations in India' : `✨ ${type.charAt(0).toUpperCase() + type.slice(1)} Destinations`;
             renderPlaces(filtered);
         }
 
-        // Search places
         function searchPlaces() {
             let query = document.getElementById("searchInput").value.toLowerCase();
-            if(!query) {
-                renderPlaces(allPlaces);
-                return;
-            }
-
+            if(!query) { renderPlaces(allPlaces); return; }
             document.getElementById("sectionLabel").innerHTML = `🔍 Results for "${document.getElementById("searchInput").value}"`;
-
             let results = allPlaces.filter(p =>
                 p.name.toLowerCase().includes(query) ||
                 p.location.toLowerCase().includes(query) ||
                 p.desc.toLowerCase().includes(query) ||
                 p.tag.toLowerCase().includes(query)
             );
-
             renderPlaces(results);
         }
 
-        // Search on Enter
         document.getElementById("searchInput").addEventListener("keypress", function(e) {
             if(e.key === "Enter") searchPlaces();
         });
 
-        // Check URL for destination from home page search
         window.onload = function() {
             renderPlaces(allPlaces);
             let params = new URLSearchParams(window.location.search);

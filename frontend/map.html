@@ -1,20 +1,18 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Xplor - Map</title>
-
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background: #1a1a2e;
-            color: white;
+            background: #fffdf5;
+            color: #1a1a2e;
             height: 100vh;
             overflow: hidden;
         }
@@ -25,13 +23,14 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 50px;
-            background: rgba(26, 26, 46, 0.95);
+            background: rgba(255,253,245,0.95);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,153,51,0.15);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 2px 20px rgba(255,153,51,0.08);
         }
 
         .logo {
@@ -56,7 +55,7 @@
             font-size: 20px;
             font-weight: 800;
             letter-spacing: 2px;
-            color: white;
+            color: #1a1a2e;
         }
 
         .logo-text span { color: #ff9933; }
@@ -69,14 +68,14 @@
         }
 
         .nav-links a {
-            color: #aaa;
+            color: #888;
             text-decoration: none;
             font-size: 14px;
             transition: color 0.3s;
             letter-spacing: 1px;
         }
 
-        .nav-links a:hover { color: white; }
+        .nav-links a:hover { color: #1a1a2e; }
         .nav-links a.active { color: #ff9933; }
 
         .nav-btn {
@@ -86,7 +85,7 @@
             border-radius: 20px;
         }
 
-        /* MAIN LAYOUT */
+        /* MAIN */
         .main {
             display: flex;
             height: 100vh;
@@ -96,19 +95,20 @@
         /* LEFT PANEL */
         .left-panel {
             width: 320px;
-            background: #16213e;
-            border-right: 1px solid rgba(255,255,255,0.05);
+            background: #fffdf5;
+            border-right: 1px solid rgba(255,153,51,0.15);
             display: flex;
             flex-direction: column;
             padding: 20px;
             gap: 15px;
             overflow-y: auto;
+            box-shadow: 2px 0 15px rgba(255,153,51,0.05);
         }
 
         .panel-title {
             font-size: 16px;
             font-weight: 700;
-            color: white;
+            color: #1a1a2e;
             letter-spacing: 1px;
             margin-bottom: 5px;
         }
@@ -119,10 +119,11 @@
         .search-box {
             display: flex;
             gap: 8px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.2);
             padding: 6px;
             border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(255,153,51,0.08);
         }
 
         .search-box input {
@@ -131,11 +132,11 @@
             outline: none;
             padding: 8px 10px;
             font-size: 13px;
-            color: white;
+            color: #1a1a2e;
             flex: 1;
         }
 
-        .search-box input::placeholder { color: #555; }
+        .search-box input::placeholder { color: #bbb; }
 
         .search-box button {
             background: #ff9933;
@@ -146,20 +147,20 @@
             font-size: 13px;
             cursor: pointer;
             transition: all 0.3s;
-            white-space: nowrap;
         }
 
         .search-box button:hover { background: #e8851f; }
 
-        /* POPULAR PLACES */
+        /* SECTION LABEL */
         .section-label {
             font-size: 11px;
-            color: #555;
+            color: #bbb;
             letter-spacing: 1.5px;
             text-transform: uppercase;
             margin-top: 5px;
         }
 
+        /* PLACE LIST */
         .place-list {
             display: flex;
             flex-direction: column;
@@ -170,17 +171,19 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.1);
             padding: 10px 14px;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
         .place-item:hover {
-            background: rgba(255,153,51,0.1);
-            border-color: rgba(255,153,51,0.2);
+            background: #fff8e7;
+            border-color: rgba(255,153,51,0.3);
+            transform: translateX(3px);
         }
 
         .place-item .place-icon { font-size: 20px; }
@@ -190,20 +193,20 @@
         .place-item .place-name {
             font-size: 13px;
             font-weight: 600;
-            color: white;
+            color: #1a1a2e;
         }
 
         .place-item .place-state {
             font-size: 11px;
-            color: #666;
+            color: #aaa;
             margin-top: 2px;
         }
 
         /* RESULT CARD */
         .result-card {
             display: none;
-            background: rgba(255,153,51,0.08);
-            border: 1px solid rgba(255,153,51,0.2);
+            background: rgba(255,153,51,0.05);
+            border: 1.5px solid rgba(255,153,51,0.2);
             padding: 15px;
             border-radius: 12px;
         }
@@ -216,14 +219,13 @@
 
         .result-card p {
             font-size: 12px;
-            color: #888;
+            color: #aaa;
         }
 
         /* MAP */
         #map {
             flex: 1;
             height: 100%;
-            filter: brightness(0.85) saturate(0.8);
         }
     </style>
 </head>
@@ -232,13 +234,13 @@
     <!-- NAVBAR -->
     <nav>
         <a class="logo" href="index.html">
-            <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none">
                 <circle cx="50" cy="50" r="45" stroke="#ff9933" stroke-width="2" stroke-dasharray="6 3"/>
-                <circle cx="50" cy="50" r="30" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                <circle cx="50" cy="50" r="30" stroke="rgba(255,153,51,0.3)" stroke-width="1"/>
                 <polygon points="50,10 55,50 50,45 45,50" fill="#ff9933"/>
-                <polygon points="50,90 55,50 50,55 45,50" fill="rgba(255,255,255,0.3)"/>
-                <polygon points="10,50 50,45 55,50 50,55" fill="rgba(255,255,255,0.3)"/>
-                <polygon points="90,50 50,45 45,50 50,55" fill="rgba(255,255,255,0.15)"/>
+                <polygon points="50,90 55,50 50,55 45,50" fill="rgba(255,153,51,0.3)"/>
+                <polygon points="10,50 50,45 55,50 50,55" fill="rgba(255,153,51,0.3)"/>
+                <polygon points="90,50 50,45 45,50 50,55" fill="rgba(255,153,51,0.15)"/>
                 <circle cx="50" cy="50" r="5" fill="#ff9933"/>
             </svg>
             <div class="logo-text">XPL<span>O</span>R</div>
@@ -259,19 +261,16 @@
         <div class="left-panel">
             <div class="panel-title">🗺️ Explore <span>India</span></div>
 
-            <!-- SEARCH -->
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Search city, place...">
                 <button onclick="searchPlace()">Go →</button>
             </div>
 
-            <!-- RESULT -->
             <div class="result-card" id="resultCard">
                 <h3 id="resultName"></h3>
                 <p id="resultInfo"></p>
             </div>
 
-            <!-- POPULAR PLACES -->
             <div class="section-label">Popular Destinations</div>
             <div class="place-list">
                 <div class="place-item" onclick="goTo(28.6139, 77.2090, 'New Delhi', 'Capital of India')">
@@ -337,20 +336,16 @@
         <div id="map"></div>
     </div>
 
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <script>
-        // Initialize map centered on India
+        // Light map style
         var map = L.map('map').setView([20.5937, 78.9629], 5);
 
-        // Dark tile layer
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
             attribution: '© OpenStreetMap © CARTO',
             maxZoom: 18
         }).addTo(map);
 
-        // Custom marker
         var customIcon = L.divIcon({
             html: '📍',
             className: '',
@@ -360,12 +355,9 @@
 
         var currentMarker = null;
 
-        // Go to location
         function goTo(lat, lng, name, info) {
             map.flyTo([lat, lng], 12, { duration: 1.5 });
-
             if(currentMarker) map.removeLayer(currentMarker);
-
             currentMarker = L.marker([lat, lng], { icon: customIcon })
                 .addTo(map)
                 .bindPopup(`<b>${name}</b><br>${info}`)
@@ -376,7 +368,6 @@
             document.getElementById("resultInfo").innerHTML = info;
         }
 
-        // Search using OpenStreetMap Nominatim
         async function searchPlace() {
             let query = document.getElementById("searchInput").value;
             if(!query) { alert("Please enter a place!"); return; }
@@ -392,7 +383,6 @@
             }
         }
 
-        // Search on Enter
         document.getElementById("searchInput").addEventListener("keypress", function(e) {
             if(e.key === "Enter") searchPlace();
         });
