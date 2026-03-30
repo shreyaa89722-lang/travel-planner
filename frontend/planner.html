@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xplor - AI Trip Planner</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #fffdf5;
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background: rgba(255,253,245,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,153,51,0.15);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(255,153,51,0.08);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            animation: spinSlow 8s linear infinite;
+        }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #1a1a2e;
+        }
+
+        .logo-text span { color: #ff9933; }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover { color: #1a1a2e; }
+        .nav-links a.active { color: #ff9933; }
+
+        .nav-btn {
+            background: #ff9933 !important;
+            color: white !important;
+            padding: 8px 22px;
+            border-radius: 20px;
+        }
+
+        .page {
+            padding: 90px 50px 50px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 40px 20px 35px;
+            background: linear-gradient(135deg, #fffdf5, #fff8e7);
+            border-radius: 24px;
+            margin-bottom: 30px;
+            border: 1.5px solid rgba(255,153,51,0.1);
+        }
+
+        .ai-badge {
+            display: inline-block;
+            background: rgba(255,153,51,0.1);
+            color: #ff9933;
+            border: 1px solid rgba(255,153,51,0.3);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .page-header h1 {
+            font-size: 38px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: #1a1a2e;
+        }
+
+        .page-header h1 span { color: #ff9933; }
+        .page-header p { color: #aaa; font-size: 14px; }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .tip-card {
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.1);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.03);
+        }
+
+        .tip-icon { font-size: 28px; margin-bottom: 8px; }
+        .tip-title { font-size: 13px; font-weight: 700; color: #1a1a2e; margin-bottom: 5px; }
+        .tip-text { font-size: 12px; color: #aaa; line-height: 1.5; }
+
+        .form-card {
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.15);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 25px rgba(255,153,51,0.06);
+        }
+
+        .form-title { font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 20px; }
+        .form-title span { color: #ff9933; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group { margin-bottom: 0; }
+
+        label {
+            display: block;
+            font-size: 11px;
+            color: #aaa;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: #fffdf5;
+            border: 1.5px solid rgba(255,153,51,0.15);
+            border-radius: 12px;
+            font-size: 14px;
+            color: #1a1a2e;
+            outline: none;
+            transition: all 0.3s;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        input::placeholder, textarea::placeholder { color: #ccc; }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: rgba(255,153,51,0.4);
+            background: white;
+            box-shadow: 0 0 15px rgba(255,153,51,0.08);
+        }
+
+        select option { background: white; color: #1a1a2e; }
+        textarea { resize: none; height: 80px; }
+        .full-width { grid-column: 1 / -1; }
+
+        .gen-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff9933, #e8851f);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 20px rgba(255,153,51,0.2);
+            margin-top: 5px;
+        }
+
+        .gen-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,153,51,0.3);
+        }
+
+        .gen-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.15);
+            border-radius: 24px;
+            margin-bottom: 25px;
+        }
+
+        .loading-icon {
+            font-size: 40px;
+            animation: spin 1s linear infinite;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .loading p { color: #aaa; font-size: 14px; }
+
+        .result-card {
+            display: none;
+            background: white;
+            border: 1.5px solid rgba(255,153,51,0.15);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(255,153,51,0.06);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,153,51,0.1);
+        }
+
+        .result-title { font-size: 18px; font-weight: 800; color: #1a1a2e; }
+        .result-title span { color: #ff9933; }
+
+        .result-tag {
+            background: rgba(255,153,51,0.1);
+            color: #ff9933;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid rgba(255,153,51,0.2);
+        }
+
+        .result-content {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.9;
+        }
+
+        .result-content h3 {
+            color: #1a1a2e;
+            margin: 15px 0 8px;
+            font-size: 16px;
+        }
+
+        .new-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: transparent;
+            color: #ff9933;
+            border: 1.5px solid rgba(255,153,51,0.3);
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .new-btn:hover { background: rgba(255,153,51,0.05); }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a class="logo" href="index.html">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="45" stroke="#ff9933" stroke-width="2" stroke-dasharray="6 3"/>
+                <circle cx="50" cy="50" r="30" stroke="rgba(255,153,51,0.3)" stroke-width="1"/>
+                <polygon points="50,10 55,50 50,45 45,50" fill="#ff9933"/>
+                <polygon points="50,90 55,50 50,55 45,50" fill="rgba(255,153,51,0.3)"/>
+                <polygon points="10,50 50,45 55,50 50,55" fill="rgba(255,153,51,0.3)"/>
+                <polygon points="90,50 50,45 45,50 50,55" fill="rgba(255,153,51,0.15)"/>
+                <circle cx="50" cy="50" r="5" fill="#ff9933"/>
+            </svg>
+            <div class="logo-text">XPL<span>O</span>R</div>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="map.html">Map</a></li>
+            <li><a href="budget.html">Budget</a></li>
+            <li><a href="planner.html" class="active">AI Planner</a></li>
+            <li><a href="suggestion.html" class="nav-btn">Suggest ✨</a></li>
+        </ul>
+    </nav>
+
+    <div class="page">
+
+        <div class="page-header">
+            <div class="ai-badge">🤖 Powered by AI</div>
+            <h1>AI Trip <span>Planner</span></h1>
+            <p>Tell us your preferences and get a personalized travel itinerary instantly!</p>
+        </div>
+
+        <div class="tips-grid">
+            <div class="tip-card">
+                <div class="tip-icon">✈️</div>
+                <div class="tip-title">Smart Itinerary</div>
+                <div class="tip-text">Get day by day travel plan based on your preferences</div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-icon">💰</div>
+                <div class="tip-title">Budget Friendly</div>
+                <div class="tip-text">Plans tailored to your budget — cheap to luxury</div>
+            </div>
+            <div class="tip-card">
+                <div class="tip-icon">🍛</div>
+                <div class="tip-title">Food & Culture</div>
+                <div class="tip-text">Local food, hidden gems and cultural experiences</div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="form-title">🗺️ Plan Your <span>Perfect Trip</span></div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>📍 Destination</label>
+                    <input type="text" id="destination" placeholder="e.g. Goa, Munnar, Jaipur">
+                </div>
+                <div class="form-group">
+                    <label>📅 Number of Days</label>
+                    <input type="number" id="days" placeholder="e.g. 3" min="1" max="30">
+                </div>
+                <div class="form-group">
+                    <label>👥 Number of People</label>
+                    <input type="number" id="people" placeholder="e.g. 2" min="1">
+                </div>
+                <div class="form-group">
+                    <label>💰 Budget</label>
+                    <select id="budget">
+                        <option value="">-- Select Budget --</option>
+                        <option value="budget">Budget (RS 500-1000/day)</option>
+                        <option value="moderate">Moderate (RS 1000-3000/day)</option>
+                        <option value="luxury">Luxury (RS 3000+/day)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>🎯 Trip Type</label>
+                    <select id="triptype">
+                        <option value="">-- Select Type --</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="relaxation">Relaxation</option>
+                        <option value="cultural">Cultural</option>
+                        <option value="food">Food Tour</option>
+                        <option value="family">Family</option>
+                        <option value="honeymoon">Honeymoon</option>
+                        <option value="friends">Friends Trip</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>🚗 Travel Mode</label>
+                    <select id="travel">
+                        <option value="">-- Select Mode --</option>
+                        <option value="car">By Car</option>
+                        <option value="train">By Train</option>
+                        <option value="flight">By Flight</option>
+                        <option value="bus">By Bus</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label>💬 Any Special Preferences?</label>
+                    <textarea id="preferences" placeholder="e.g. vegetarian food, avoid crowded places, want to see waterfalls..."></textarea>
+                </div>
+            </div>
+
+            <button class="gen-btn" onclick="generatePlan()" id="genBtn">
+                🤖 Generate My Trip Plan
+            </button>
+        </div>
+
+        <div class="loading" id="loading">
+            <span class="loading-icon">🌍</span>
+            <p>AI is planning your perfect trip...</p>
+        </div>
+
+        <div class="result-card" id="resultCard">
+            <div class="result-header">
+                <div class="result-title">🗺️ Your <span>Trip Plan</span></div>
+                <div class="result-tag" id="resultTag"></div>
+            </div>
+            <div class="result-content" id="resultContent"></div>
+            <button class="new-btn" onclick="newPlan()">✨ Plan Another Trip</button>
+        </div>
+
+    </div>
+
+    <script>
+        // ⚠️ PASTE YOUR OPENROUTER API KEY HERE
+        const API_KEY = "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";
+
+        async function generatePlan() {
+            let destination = document.getElementById("destination").value;
+            let days = document.getElementById("days").value;
+            let people = document.getElementById("people").value;
+            let budget = document.getElementById("budget").value;
+            let triptype = document.getElementById("triptype").value;
+            let travel = document.getElementById("travel").value;
+            let preferences = document.getElementById("preferences").value;
+
+            if(!destination || !days || !budget || !triptype) {
+                alert("Please fill in destination, days, budget and trip type!");
+                return;
+            }
+
+            document.getElementById("loading").style.display = "block";
+            document.getElementById("resultCard").style.display = "none";
+            document.getElementById("genBtn").disabled = true;
+
+            let prompt = `Create a detailed ${days}-day travel itinerary for ${destination}, India.
+- Number of people: ${people || 1}
+- Budget: ${budget}
+- Trip type: ${triptype}
+- Travel mode: ${travel || 'any'}
+- Special preferences: ${preferences || 'none'}
+
+Please provide day by day itinerary with morning, afternoon and evening activities, food recommendations with local dishes, stay options with price range, travel tips, estimated costs in Indian Rupees, and hidden gems!`;
+
+            try {
+                const response = await fetch(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${API_KEY}`,
+                            "HTTP-Referer": "http://localhost:5501",
+                            "X-Title": "Xplor Travel Planner"
+                        },
+                        body: JSON.stringify({
+                            model: "meta-llama/llama-3.2-3b-instruct:free",
+                            messages: [
+                                {
+                                    role: "user",
+                                    content: prompt
+                                }
+                            ]
+                        })
+                    }
+                );
+
+                const data = await response.json();
+                console.log(data);
+
+                if(data.error) {
+                    throw new Error(data.error.message);
+                }
+
+                const text = data.choices[0].message.content;
+
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("resultCard").style.display = "block";
+                document.getElementById("resultTag").innerHTML = `📍 ${destination} · ${days} days`;
+                document.getElementById("resultContent").innerHTML = formatText(text);
+
+            } catch(error) {
+                document.getElementById("loading").style.display = "none";
+                alert("Error: " + error.message);
+                console.error(error);
+            }
+
+            document.getElementById("genBtn").disabled = false;
+        }
+
+        function formatText(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/#{1,3} (.*)/g, '<h3>$1</h3>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function newPlan() {
+            document.getElementById("resultCard").style.display = "none";
+            document.getElementById("destination").value = "";
+            document.getElementById("days").value = "";
+            document.getElementById("people").value = "";
+            document.getElementById("budget").value = "";
+            document.getElementById("triptype").value = "";
+            document.getElementById("travel").value = "";
+            document.getElementById("preferences").value = "";
+        }
+    </script>
+
+</body>
+</html>
