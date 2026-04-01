@@ -1,21 +1,487 @@
-// Add this inside calculate(), after computing grandTotal
-async function calculate() {
-    // ... your existing calculation code stays the same ...
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xplor - Budget Calculator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    // ✅ ADD THIS — save to backend
-    try {
-        await fetch("http://127.0.0.1:5000/budget", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                destination: destination,
-                days: days,
-                people: people,
-                total: grandTotal
-            })
-        });
-        console.log("Budget saved to database!");
-    } catch(e) {
-        console.log("Could not save budget:", e);
-    }
-}
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            background: #fffdf5;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(255,153,51,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,200,100,0.08) 0%, transparent 50%);
+            color: #1a1a2e;
+        }
+
+        /* NAVBAR */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            background: rgba(255,253,245,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,153,51,0.15);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(255,153,51,0.08);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            animation: spinSlow 8s linear infinite;
+        }
+
+        @keyframes spinSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #1a1a2e;
+        }
+
+        .logo-text span { color: #ff9933; }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a:hover { color: #1a1a2e; }
+        .nav-links a.active { color: #ff9933; }
+
+        .nav-btn {
+            background: #ff9933 !important;
+            color: white !important;
+            padding: 8px 22px;
+            border-radius: 20px;
+        }
+
+        /* PAGE */
+        .page {
+            padding: 100px 40px 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .page-header h1 {
+            font-size: 38px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #1a1a2e;
+        }
+
+        .page-header h1 span { color: #ff9933; }
+
+        .page-header p {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        /* WRAPPER */
+        .budget-wrapper {
+            display: flex;
+            gap: 25px;
+            width: 100%;
+            max-width: 950px;
+        }
+
+        /* GLASS CARD */
+        .glass {
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(255,153,51,0.15);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 5px 30px rgba(255,153,51,0.08);
+        }
+
+        /* FORM */
+        .budget-form { flex: 1; }
+
+        .form-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            color: #1a1a2e;
+        }
+
+        .form-title span { color: #ff9933; }
+
+        .form-subtitle {
+            font-size: 11px;
+            color: #bbb;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .form-group { margin-bottom: 16px; }
+
+        label {
+            display: block;
+            font-size: 11px;
+            color: #aaa;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            background: #fffdf5;
+            border: 1.5px solid rgba(255,153,51,0.15);
+            border-radius: 12px;
+            font-size: 14px;
+            color: #1a1a2e;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input::placeholder { color: #ccc; }
+
+        input:focus, select:focus {
+            border-color: rgba(255,153,51,0.4);
+            background: white;
+            box-shadow: 0 0 15px rgba(255,153,51,0.08);
+        }
+
+        select option { background: white; color: #1a1a2e; }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .form-row .form-group { flex: 1; }
+
+        .calc-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff9933, #e8851f);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            box-shadow: 0 5px 20px rgba(255,153,51,0.2);
+        }
+
+        .calc-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,153,51,0.3);
+        }
+
+        /* RIGHT */
+        .budget-result {
+            width: 310px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-state .icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .empty-state p {
+            color: #bbb;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* SUMMARY */
+        .summary-card { display: none; }
+
+        .summary-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #1a1a2e;
+        }
+
+        .dest-tag {
+            display: inline-block;
+            background: rgba(255,153,51,0.1);
+            color: #ff9933;
+            border: 1px solid rgba(255,153,51,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-bottom: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,153,51,0.08);
+            font-size: 13px;
+        }
+
+        .summary-row .slabel { color: #aaa; }
+        .summary-row .svalue { color: #1a1a2e; font-weight: 600; }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0 0;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .total-row .slabel { color: #aaa; }
+        .total-row .svalue { color: #ff9933; }
+
+        /* TIP CARD */
+        .tip-card {
+            background: rgba(255,153,51,0.05);
+            border: 1.5px solid rgba(255,153,51,0.1);
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .tip-title {
+            font-size: 12px;
+            color: #ff9933;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 8px;
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .tip-item:last-child { margin-bottom: 0; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a class="logo" href="index.html">
+            <svg class="logo-icon" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="45" stroke="#ff9933" stroke-width="2" stroke-dasharray="6 3"/>
+                <circle cx="50" cy="50" r="30" stroke="rgba(255,153,51,0.3)" stroke-width="1"/>
+                <polygon points="50,10 55,50 50,45 45,50" fill="#ff9933"/>
+                <polygon points="50,90 55,50 50,55 45,50" fill="rgba(255,153,51,0.3)"/>
+                <polygon points="10,50 50,45 55,50 50,55" fill="rgba(255,153,51,0.3)"/>
+                <polygon points="90,50 50,45 45,50 50,55" fill="rgba(255,153,51,0.15)"/>
+                <circle cx="50" cy="50" r="5" fill="#ff9933"/>
+            </svg>
+            <div class="logo-text">XPL<span>O</span>R</div>
+        </a>
+
+       <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="explore.html">Explore</a></li>
+    <li><a href="map.html" class="active">Map</a></li>
+    <li><a href="budget.html">Budget</a></li>
+    <li><a href="suggestion.html" class="nav-btn">Suggest ✨</a></li>
+</ul>
+    </nav>
+
+    <div class="page">
+        <div class="page-header">
+            <h1>💰 Budget <span>Calculator</span></h1>
+            <p>Plan your perfect India trip without breaking the bank</p>
+        </div>
+
+        <div class="budget-wrapper">
+
+            <!-- FORM -->
+            <div class="glass budget-form">
+                <div class="form-title">Plan Your <span>Trip</span></div>
+                <div class="form-subtitle">Fill in the details below</div>
+
+                <div class="form-group">
+                    <label>📍 Destination</label>
+                    <input type="text" id="destination" placeholder="e.g. Goa, Munnar, Jaipur...">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📅 Days</label>
+                        <input type="number" id="days" placeholder="e.g. 3" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>👥 People</label>
+                        <input type="number" id="people" placeholder="e.g. 2" min="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>🏨 Stay Type (per night)</label>
+                    <select id="stay">
+                        <option value="0">-- Select Stay --</option>
+                        <option value="800">Budget (RS 800/night)</option>
+                        <option value="2000">Standard (RS 2000/night)</option>
+                        <option value="5000">Luxury (RS 5000/night)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>🍽️ Food (per day per person)</label>
+                    <select id="food">
+                        <option value="0">-- Select Food --</option>
+                        <option value="300">Cheap (RS 300/day)</option>
+                        <option value="800">Medium (RS 800/day)</option>
+                        <option value="2000">Expensive (RS 2000/day)</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>⛽ Fuel (RS)</label>
+                        <input type="number" id="fuel" placeholder="Fuel cost">
+                    </div>
+                    <div class="form-group">
+                        <label>📦 Others (RS)</label>
+                        <input type="number" id="other" placeholder="Other expenses">
+                    </div>
+                </div>
+
+                <button class="calc-btn" onclick="calculate()">✨ Calculate My Budget</button>
+            </div>
+
+            <!-- RESULT -->
+            <div class="budget-result">
+
+                <div class="glass summary-card" id="summaryCard">
+                    <div class="summary-title">💰 Summary</div>
+                    <div class="dest-tag" id="destTag"></div>
+                    <div class="summary-row">
+                        <span class="slabel">🏨 Stay</span>
+                        <span class="svalue" id="stayTotal"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="slabel">🍽️ Food</span>
+                        <span class="svalue" id="foodTotal"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="slabel">⛽ Fuel</span>
+                        <span class="svalue" id="fuelTotal"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="slabel">📦 Others</span>
+                        <span class="svalue" id="otherTotal"></span>
+                    </div>
+                    <div class="total-row">
+                        <span class="slabel">Total</span>
+                        <span class="svalue" id="grandTotal"></span>
+                    </div>
+                </div>
+
+                <div class="glass empty-state" id="emptyState">
+                    <span class="icon">🧳</span>
+                    <p>Fill the form to calculate your travel budget!</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-title">💡 Travel Tips</div>
+                    <div class="tip-item">✈️ Book early to save up to 30% on hotels</div>
+                    <div class="tip-item">🌤️ Off-season travel = cheaper rates</div>
+                    <div class="tip-item">🚌 Local transport saves big on fuel</div>
+                    <div class="tip-item">🍱 Street food is cheap and delicious!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            let destination = document.getElementById("destination").value;
+            let days = parseFloat(document.getElementById("days").value) || 1;
+            let people = parseFloat(document.getElementById("people").value) || 1;
+            let stayPerNight = parseFloat(document.getElementById("stay").value) || 0;
+            let foodPerDay = parseFloat(document.getElementById("food").value) || 0;
+            let fuel = parseFloat(document.getElementById("fuel").value) || 0;
+            let other = parseFloat(document.getElementById("other").value) || 0;
+
+            if(!destination) {
+                alert("Please enter a destination!");
+                return;
+            }
+
+            let stayTotal = stayPerNight * days;
+            let foodTotal = foodPerDay * days * people;
+            let grandTotal = stayTotal + foodTotal + fuel + other;
+
+            document.getElementById("destTag").innerHTML = "📍 " + destination + " · " + days + " days · " + people + " people";
+            document.getElementById("stayTotal").innerHTML = "RS " + stayTotal.toLocaleString();
+            document.getElementById("foodTotal").innerHTML = "RS " + foodTotal.toLocaleString();
+            document.getElementById("fuelTotal").innerHTML = "RS " + fuel.toLocaleString();
+            document.getElementById("otherTotal").innerHTML = "RS " + other.toLocaleString();
+            document.getElementById("grandTotal").innerHTML = "RS " + grandTotal.toLocaleString();
+
+            document.getElementById("summaryCard").style.display = "block";
+            document.getElementById("emptyState").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
